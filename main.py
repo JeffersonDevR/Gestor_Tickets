@@ -1,2 +1,5 @@
+from Modulos.Pagos import * 
+
+
 if __name__ == "__main__a":
-    print("Gestor de Tickets")
+    pass
