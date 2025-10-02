@@ -33,7 +33,7 @@ class PagoEnEfectivo(Pago):
     def validate(self) -> bool:
         return self.ammount > 0
     
-    def process(self) -> bool;
+    def process(self) -> bool:
         if not self.validate():
             return False
         print(f"Pago en efectivo realizado: ${self.ammount}")
