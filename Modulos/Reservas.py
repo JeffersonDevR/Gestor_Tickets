@@ -6,7 +6,7 @@ class Reservas:
         # Aquí se guardan todas las reservas en formato de diccionario
         self.lista_reservas = []
 
-    # 1. CREAR RESERVA
+    # 1. Crear reservas 
     def crear_reserva(self, cliente, habitacion, fecha, hora):
         if habitacion in habitaciones_disponibles:
             reserva = {
