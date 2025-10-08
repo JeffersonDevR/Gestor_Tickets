@@ -58,3 +58,7 @@ class Reservas:
             print("\nLista de reservas:")
             for r in self.lista_reservas:
                 print(f"- Cliente: {r['cliente']}, Habitación: {r['habitacion']}, Fecha: {r['fecha']}, Hora: {r['hora']}")
+                print("prueba de commit/push")
+                print("hola")
+                
+print("3456")
