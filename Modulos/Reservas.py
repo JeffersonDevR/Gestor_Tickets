@@ -58,5 +58,55 @@ class Reservas:
             print("\nLista de reservas:")
             for r in self.lista_reservas:
                 print(f"- Cliente: {r['cliente']}, Habitación: {r['habitacion']}, Fecha: {r['fecha']}, Hora: {r['hora']}")
-                   
-                       
+                
+def menu():
+    sistema = Reservas()  # Crear el objeto del sistema de reservas
+
+    while True:
+        print("=== Sistema de Gestión de Reservas ===")
+        print("1. Crear reserva")
+        print("2. Modificar reserva")
+        print("3. Cancelar reserva")
+        print("4. Mostrar todas las reservas")
+        print("5. Mostrar habitaciones disponibles")
+        print("6. Salir")
+
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == "1":
+            cliente = input("Nombre del cliente: ")
+            print("Las habitaciones disponibles son : ", habitaciones_disponibles)
+            habitacion = input("Número de habitación: ")
+            fecha = input("Fecha (dd/mm/aaaa): ")
+            hora = input("Hora: ")
+            sistema.crear_reserva(cliente, habitacion, fecha, hora)
+
+        elif opcion == "2":
+            cliente = input("Nombre del cliente: ")
+            print("Las habitaciones disponibles son : ", habitaciones_disponibles)
+            nueva_habitacion = input("Nueva habitación: ")
+            nueva_fecha = input("Nueva fecha (dd/mm/aaaa): ")
+            nueva_hora = input("Nueva hora: ")
+            sistema.modificar_reserva(cliente, nueva_habitacion, nueva_fecha, nueva_hora)
+
+        elif opcion == "3":
+            cliente = input("Nombre del cliente: ")
+            sistema.cancelar_reserva(cliente)
+
+        elif opcion == "4":
+            sistema.mostrar_reservas()
+
+        elif opcion == "5":
+            print("Habitaciones disponibles:", habitaciones_disponibles)
+
+        elif opcion == "6":
+            print("Saliendo del sistema...")
+            break
+
+        else:
+            print("Opción no válida, intente de nuevo.")
+
+        print()
+
+# Ejecutar el menú
+menu()
