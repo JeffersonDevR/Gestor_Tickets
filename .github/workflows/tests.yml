@@ -1,13 +1,38 @@
-name: Modules Tests
+name: Testing of CI/CD with GitHub Actions
 
 on:
   push:
-    branches: [ desarrollo]
-  pull_request:
     branches: [ desarrollo ]
+  pull_request:
+    branches: [ produccion ]
+    types: [closed]
 
 jobs:
-  test:
+ 
+  test_desarrollo:
+    if: github.ref == 'refs/heads/desarrollo'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run unit tests (desarrollo)
+      run: |
+        python -m unittest discover -s tests -p "test_*.py" -v
+
+  test_produccion:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'produccion' && github.event.pull_request.head.ref == 'desarrollo'
     runs-on: ubuntu-latest
 
     steps:
@@ -24,5 +49,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run tests
-      run: pytest -v
+    - name: Run unit tests (merge to produccion)
+      run: |
+        python -m unittest discover -s tests -p "test_*.py" -v
