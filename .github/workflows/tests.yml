@@ -29,7 +29,7 @@ jobs:
 
     - name: Run unit tests (desarrollo)
       run: |
-        python -m unittest discover -s tests -p "test_*.py" -v
+        python -m unittest discover -s tests/unit -p "test_*.py" -v
 
   test_produccion:
     if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'produccion' && github.event.pull_request.head.ref == 'desarrollo'
@@ -51,4 +51,4 @@ jobs:
 
     - name: Run unit tests (merge to produccion)
       run: |
-        python -m unittest discover -s tests -p "test_*.py" -v
+        python -m unittest discover -s tests/unit -p "test_*.py" -v
