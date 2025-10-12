@@ -108,5 +108,7 @@ def menu():
 
         print()
 
-# Ejecutar el menú
-menu()
+
+if __name__ == "__main__":
+    # Ejecutar el menú
+    menu()
