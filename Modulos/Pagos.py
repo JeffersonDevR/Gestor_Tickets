@@ -9,8 +9,8 @@ from enum import Enum
 
 class Pago(ABC):
 
-    def __init__(self,ammount:float,date):
-        self.ammount = ammount
+    def __init__(self,amount:float,date):
+        self.amount = amount
         self.date = date
         self.status = "pending"
 
@@ -26,25 +26,25 @@ class Pago(ABC):
 
 class PagoEnEfectivo(Pago):
 
-    def __init__(self, ammount, date):
-        super().__init__(ammount, date)
-        
+    def __init__(self, amount, date):
+        super().__init__(amount, date)
+
 
     def validate(self) -> bool:
-        return self.ammount > 0
-    
+        return self.amount > 0
+
     def process(self) -> bool:
         if not self.validate():
             return False
-        print(f"Pago en efectivo realizado: ${self.ammount}")
-        self.status = "completed" 
-        return True  
+        print(f"Pago en efectivo realizado: ${self.amount}")
+        self.status = "completed"
+        return True
 
 class PagoConTarjeta(Pago):
 
-    def __init__(self, ammount, date,card_number:str,cvv:str):
-        super().__init__(ammount, date)
-        self.card_number - card_number
+    def __init__(self, amount, date,card_number:str,cvv:str):
+        super().__init__(amount, date)
+        self.card_number = card_number
         self.cvv = cvv
 
     def validate(self) -> bool:
@@ -54,7 +54,7 @@ class PagoConTarjeta(Pago):
         if len(self.cvv) != 3:
             return False
         return True
-        
+
     def process(self) -> bool:
         if not self.validate():
             return False
