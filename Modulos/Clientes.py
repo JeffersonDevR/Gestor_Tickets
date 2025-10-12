@@ -17,24 +17,24 @@ class Cliente:
         else:#este else va con el for, no con el if. Para evitar duplicados(osea que si no es if,vaya al else
             #y me cree un usuario con el el mismo documento, ya que el else, no tiene ninguna validacion)
             cliente_nuevo=Cliente(nombre,numero_documento,correo_electr,telefono)
-            Cliente.clientes_registrados.append(cliente_nuevo)
+            cls.clientes_registrados.append(cliente_nuevo)
             print("Cliente registrado con éxito")
             return cliente_nuevo
     @classmethod
     def actualizar_info_clientes(cls,buscar_cliente):
         encontrado=False
         for  cliente_existente in cls.clientes_registrados:
-            if buscar_cliente.lower() in cliente_existente.nombre.lower():
+            if buscar_cliente.lower() in cliente_existente.nombre.lower().split():
                 if not encontrado:
                    print(f"Los usuarios que tenemos registrados con el nombre : {buscar_cliente} son: ") 
                    encontrado=True#para que se muestre una sola vez el mensaje
                 print(cliente_existente.nombre)
-            else:
+        if not encontrado:
               print(f"No hay un usuario que coincida con el nombre {buscar_cliente} en nuestros registros")
               return  
         numero_de_documento = int(input("Ingrese su número de identificacion, para poder continuar con la actualizacion" \
                 "de algunos de sus datos; "))
-        for cliente_coincididos in Cliente.clientes_registrados:
+        for cliente_coincididos in cls.clientes_registrados:
             if cliente_coincididos.n_identificacion == numero_de_documento:
                     print(f"Estos son sus datos actuales: {cliente_coincididos}")
 
@@ -80,14 +80,24 @@ class Cliente:
                         return f"Okey, no quieres cambios, saliendo de la opción actualizar...."
                     else:
                         print("Ingrese si o no,animal.")
-            else:
+            else:#colocar este else, con el for o un return al if y luego un print al terminar el bucle, sino encuentra.(el print sin el else
+                #solo si el if tiene un return para terminar cuando se cumpla, sino asi se cumpla va seguir y me va imprimir el print, cosa que no seria)
                 print( f"No hay ningún cliente en nuestros registros con el número de documento: {numero_de_documento}")
     def mostrar_reservas_de_un_cliente(self):
         nombre_cliente_busq=input("Ingrese el nombre del cliente que desea consultar: ")
-        documento_cliente_busq=int(input("Ingrese  su número de identificación"))
-        for cliente in self.historial_de_reservas:
-           if nombre_cliente_busq==cliente.n_identificacion and documento_cliente_busq==cliente.n_identificacion and documento_cliente_busq== cliente.correo :
-               print(cliente.historial_de_reservas)
+        documento_cliente_busq=int(input("Ingrese  su número de identificación: "))
+        correo_cliente_busq=input("Ingrese su correo electronico: ")
+        for cliente in Cliente.clientes_registrados:
+           if nombre_cliente_busq.lower()==cliente.nombre.lower() and documento_cliente_busq==cliente.n_identificacion and correo_cliente_busq.lower()== cliente.correo.lower() :
+               if cliente.historial_de_reservas:
+                   print(f"Este es el historial de reservas del cliente: {cliente.historial_de_reservas}")
+               else:
+                   print(f"El cliente {cliente.nombre} no tiene reservas asignadas")
+               break
+        else:#Para cuando el if no funciona con ningún cliente, y no me cierre el bucle con el primer usuario, en el caso de que el if sea incorrecto.Porque si coloco el else
+             #con el primer if, me va mostrar el mensaje para cada cliente que encuentre que sea diferente, y si coloco un break a ese else, si el primer usuario los datos no son iguales
+             #porque pertenecen a otro cliente, entonces me va mostrar el mensaje del else, y me termina el bucle y  no compara el resto, por eso va con el for, para evitar esos 2 errores.
+             print("¡Error!. Alguno de los datos ingresados no coinciden con un cliente o son incorrectos")
                
 
 
@@ -118,8 +128,17 @@ while True:
         
             
     elif option=="3":
+        cliente_instancia=None
+        for client in Cliente.clientes_registrados:
+             cliente_instancia=client
+        if cliente_instancia is not None:   
+            cliente_instancia.mostrar_reservas_de_un_cliente()
+        else:
+            print("No hay clientes registrados en el sistema para ver sus reservas.")
+                
+    elif option=="4":
         print("Adios bby")
-        break    
+        break       
     else:
         print("Escoja del 1 al 3 bobo")
 
