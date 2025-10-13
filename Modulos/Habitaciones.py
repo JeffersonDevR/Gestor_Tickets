@@ -19,6 +19,12 @@ class Habitacion:
 class GestorHabitaciones:
     def __init__(self):
         self.habitaciones = []
+        # Agregar habitaciones por defecto
+        self.habitaciones.append(Habitacion("001", "Sencilla", 50.0))
+        self.habitaciones.append(Habitacion("002", "Doble", 80.0))
+        self.habitaciones.append(Habitacion("003", "Suite", 150.0))
+        self.habitaciones.append(Habitacion("004", "Sencilla", 50.0))
+        self.habitaciones.append(Habitacion("005", "Doble", 80.0))
 
     def agregar_habitacion(self):
         print("\n--- Registrar nueva habitación ---")
@@ -86,8 +92,25 @@ class GestorHabitaciones:
                 h.mostrar_info()
         print()
 
+    def get_habitaciones_disponibles(self):
+        return [h.numero for h in self.habitaciones if h.estado == "disponible"]
 
-if __name__ == "__main__":
+    def ocupar_habitacion(self, numero):
+        for h in self.habitaciones:
+            if h.numero == numero and h.estado == "disponible":
+                h.cambiar_estado("ocupada")
+                return True
+        return False
+
+    def liberar_habitacion(self, numero):
+        for h in self.habitaciones:
+            if h.numero == numero and h.estado == "ocupada":
+                h.cambiar_estado("disponible")
+                return True
+        return False
+
+
+def menu():
     gestor = GestorHabitaciones()
     opcion = ""
 
@@ -118,3 +141,7 @@ if __name__ == "__main__":
             print("Saliendo...")
         else:
             print("Opción no válida. Intente nuevamente.\n")
+
+
+if __name__ == "__main__":
+    menu()

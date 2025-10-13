@@ -61,4 +61,44 @@ class PagoConTarjeta(Pago):
         print(f"Pago con tarjeta completado: ${self.amount}")
         self.status = "completed"
         return True
+
+
+def menu():
+    while True:
+        print("====== GESTIÓN DE PAGOS ======")
+        print("1. Pago en efectivo")
+        print("2. Pago con tarjeta")
+        print("3. Salir")
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == "1":
+            amount = float(input("Ingrese el monto: "))
+            date = input("Ingrese la fecha (dd/mm/aaaa): ")
+            pago = PagoEnEfectivo(amount, date)
+            if pago.process():
+                print("Pago en efectivo procesado exitosamente.")
+            else:
+                print("Error en el pago en efectivo.")
+
+        elif opcion == "2":
+            amount = float(input("Ingrese el monto: "))
+            date = input("Ingrese la fecha (dd/mm/aaaa): ")
+            card_number = input("Ingrese el número de tarjeta (26 dígitos): ")
+            cvv = input("Ingrese el CVV (3 dígitos): ")
+            pago = PagoConTarjeta(amount, date, card_number, cvv)
+            if pago.process():
+                print("Pago con tarjeta procesado exitosamente.")
+            else:
+                print("Error en el pago con tarjeta.")
+
+        elif opcion == "3":
+            print("Saliendo del módulo de pagos...")
+            break
+
+        else:
+            print("Opción no válida. Intente nuevamente.")
+
+
+if __name__ == "__main__":
+    menu()
     
