@@ -6,7 +6,7 @@ class Habitacion:
         self.estado = "disponible"
 
     def mostrar_info(self):
-        print(f"Habitación {self.numero} | Tipo: {self.tipo} | Tarifa: ${self.tarifa:.2f} | Estado: {self.estado}")
+        print(f"Habitación {self.numero} | Tipo: {self.tipo} | Tarifa: ${self.tarifa:,.0f} COP | Estado: {self.estado}")
 
     def cambiar_estado(self, nuevo_estado):
         if nuevo_estado in ["disponible", "ocupada", "mantenimiento"]:
@@ -114,15 +114,17 @@ def menu():
     gestor = GestorHabitaciones()
     opcion = ""
 
-    while opcion != "7":
-        print("====== SISTEMA DE GESTIÓN DE HABITACIONES ======")
-        print("1. Registrar habitación")
+    while opcion != "9":
+        print("====== PANEL ADMINISTRADOR - GESTIÓN DE HABITACIONES ======")
+        print("1. Registrar nueva habitación")
         print("2. Mostrar todas las habitaciones")
-        print("3. Cambiar estado de habitación (disponibilidad en tiempo real)")
+        print("3. Cambiar estado de habitación")
         print("4. Buscar habitaciones por estado")
         print("5. Buscar habitaciones por tipo")
         print("6. Clasificar habitaciones por tarifa")
-        print("7. Salir")
+        print("7. Eliminar habitación")
+        print("8. Estadísticas de habitaciones")
+        print("9. Salir")
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
@@ -138,7 +140,32 @@ def menu():
         elif opcion == "6":
             gestor.ordenar_por_tarifa()
         elif opcion == "7":
-            print("Saliendo...")
+            print("=== ELIMINAR HABITACIÓN ===")
+            numero = input("Ingrese el número de habitación a eliminar: ")
+            for i, hab in enumerate(gestor.habitaciones):
+                if hab.numero == numero:
+                    del gestor.habitaciones[i]
+                    print(f"Habitación {numero} eliminada exitosamente.")
+                    break
+            else:
+                print("Habitación no encontrada.")
+        elif opcion == "8":
+            print("=== ESTADÍSTICAS DE HABITACIONES ===")
+            total = len(gestor.habitaciones)
+            disponibles = len([h for h in gestor.habitaciones if h.estado == "disponible"])
+            ocupadas = len([h for h in gestor.habitaciones if h.estado == "ocupada"])
+            mantenimiento = len([h for h in gestor.habitaciones if h.estado == "mantenimiento"])
+
+            print(f"Total de habitaciones: {total}")
+            print(f"Disponibles: {disponibles}")
+            print(f"Ocupadas: {ocupadas}")
+            print(f"En mantenimiento: {mantenimiento}")
+
+            if total > 0:
+                ocupacion = (ocupadas / total) * 100
+                print(".1f")
+        elif opcion == "9":
+            print("Saliendo del módulo de habitaciones...")
         else:
             print("Opción no válida. Intente nuevamente.\n")
 

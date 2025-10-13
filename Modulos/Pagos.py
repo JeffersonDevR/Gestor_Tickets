@@ -36,7 +36,7 @@ class PagoEnEfectivo(Pago):
     def process(self) -> bool:
         if not self.validate():
             return False
-        print(f"Pago en efectivo realizado: ${self.amount}")
+        print(f"Pago en efectivo realizado: ${self.amount:,.0f} COP")
         self.status = "completed"
         return True
 
@@ -58,7 +58,7 @@ class PagoConTarjeta(Pago):
     def process(self) -> bool:
         if not self.validate():
             return False
-        print(f"Pago con tarjeta completado: ${self.amount}")
+        print(f"Pago con tarjeta completado: ${self.amount:,.0f} COP")
         self.status = "completed"
         return True
 

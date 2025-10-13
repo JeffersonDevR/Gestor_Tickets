@@ -3,6 +3,9 @@ from Modulos.Clientes import menu as menu_clientes, Cliente
 from Modulos.Habitaciones import menu as menu_habitaciones
 from Modulos.Reservas import menu_reservas
 
+# Admin credentials (hardcoded)
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "admin123"
 
 def seleccionar_cliente():
     """Función para seleccionar o registrar un cliente antes de proceder"""

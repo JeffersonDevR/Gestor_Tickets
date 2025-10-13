@@ -83,17 +83,21 @@ class Cliente:
             else:#colocar este else, con el for o un return al if y luego un print al terminar el bucle, sino encuentra.(el print sin el else
                 #solo si el if tiene un return para terminar cuando se cumpla, sino asi se cumpla va seguir y me va imprimir el print, cosa que no seria)
                 print( f"No hay ningún cliente en nuestros registros con el número de documento: {numero_de_documento}")
-    def mostrar_reservas_de_un_cliente(self):
-        nombre_cliente_busq=input("Ingrese el nombre del cliente que desea consultar: ")
-        documento_cliente_busq=int(input("Ingrese  su número de identificación: "))
-        correo_cliente_busq=input("Ingrese su correo electronico: ")
+    def mostrar_reservas_de_un_cliente(self, nombre=None, documento=None, correo=None):
+        """Show reservations for a client. If no parameters provided, use current client data"""
+        if nombre is None and documento is None and correo is None:
+            # Use current client data
+            nombre = self.nombre
+            documento = self.n_identificacion
+            correo = self.correo
+
         for cliente in Cliente.clientes_registrados:
-           if nombre_cliente_busq.lower()==cliente.nombre.lower() and documento_cliente_busq==cliente.n_identificacion and correo_cliente_busq.lower()== cliente.correo.lower() :
-               if cliente.historial_de_reservas:
-                   print(f"Este es el historial de reservas del cliente: {cliente.historial_de_reservas}")
-               else:
-                   print(f"El cliente {cliente.nombre} no tiene reservas asignadas")
-               break
+           if nombre.lower()==cliente.nombre.lower() and documento==cliente.n_identificacion and correo.lower()== cliente.correo.lower() :
+                if cliente.historial_de_reservas:
+                    print(f"Este es el historial de reservas del cliente: {cliente.historial_de_reservas}")
+                else:
+                    print(f"El cliente {cliente.nombre} no tiene reservas asignadas")
+                break
         else:#Para cuando el if no funciona con ningún cliente, y no me cierre el bucle con el primer usuario, en el caso de que el if sea incorrecto.Porque si coloco el else
              #con el primer if, me va mostrar el mensaje para cada cliente que encuentre que sea diferente, y si coloco un break a ese else, si el primer usuario los datos no son iguales
              #porque pertenecen a otro cliente, entonces me va mostrar el mensaje del else, y me termina el bucle y  no compara el resto, por eso va con el for, para evitar esos 2 errores.
@@ -125,7 +129,7 @@ def menu():
 
         elif option == "2":
             if not Cliente.clientes_registrados:
-                print("No hay clientes registrados hasta el momento en el sistema")
+                print("No hay clientes registrados en el sistema.")
             else:
                 print("Ingrese el nombre del cliente que desea buscar: ")
                 nombre_cliente = input("")
@@ -138,11 +142,23 @@ def menu():
             if cliente_instancia is not None:
                 cliente_instancia.mostrar_reservas_de_un_cliente()
             else:
-                print("No hay clientes registrados en el sistema para ver sus reservas.")
+                doc = input("Ingrese el número de documento: ")
+                try:
+                    doc_num = int(doc)
+                    for cliente in Cliente.clientes_registrados:
+                        if cliente.n_identificacion == doc_num:
+                            print("Cliente encontrado:")
+                            print(cliente)
+                            break
+                    else:
+                        print("Cliente no encontrado.")
+                except ValueError:
+                    print("Número de documento inválido.")
 
         elif option == "4":
             print("Adios bby")
             break
+
         else:
             print("Escoja del 1 al 4 bobo")
 
