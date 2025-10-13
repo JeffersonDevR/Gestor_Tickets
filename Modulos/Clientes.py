@@ -107,68 +107,40 @@ class Cliente:
 
     def __str__(self):
         return f"Cliente: {self.nombre}||\nIdentificación: {self.n_identificacion}|| Correo electrónico: {self.correo}|| Número de contacto: {self.n_telefono}"
+
+
 def menu():
-    """Admin client management menu"""
     while True:
-        print("====== PANEL ADMINISTRADOR - GESTIÓN DE CLIENTES ======")
+        print("====== GESTIÓN DE CLIENTES ======")
         print("1. Registrar cliente")
         print("2. Actualizar información de cliente")
         print("3. Mostrar reservas de un cliente")
-        print("4. Listar todos los clientes")
-        print("5. Buscar cliente por documento")
-        print("6. Salir")
+        print("4. Salir")
         option = input("Ingrese una opción: ")
-
         if option == "1":
-            print("Ingrese los datos del cliente para registro: ")
-            name = input("Nombre completo (con apellidos): ")
-            number_docu = int(input("Número de identificación: "))
-            email_electro = input("Correo electrónico: ")
-            iphone = int(input("Número de teléfono: "))
-            cliente = Cliente.registrar_cliente(name, number_docu, email_electro, iphone)
-            if cliente:
-                print("Cliente registrado exitosamente.")
-                print(cliente)
-            else:
-                print("Error: Cliente ya existe o datos inválidos.")
+            print("Ingrese sus datos, para hacer el registro: ")
+            name = input("Ingrese su nombre completo(con apellidos): ")
+            number_docu = int(input("Ingrese su número de identificación: "))
+            email_electro = input("Ingrese su correo electrónico: ")
+            iphone = int(input("Ingrese su número de teléfono: "))
+            Cliente.registrar_cliente(name, number_docu, email_electro, iphone)
+            for clientes in Cliente.clientes_registrados:
+                print(clientes)
 
         elif option == "2":
             if not Cliente.clientes_registrados:
                 print("No hay clientes registrados en el sistema.")
             else:
-                print("Ingrese el nombre del cliente que desea actualizar: ")
+                print("Ingrese el nombre del cliente que desea buscar: ")
                 nombre_cliente = input("")
                 Cliente.actualizar_info_clientes(nombre_cliente)
 
         elif option == "3":
-            if not Cliente.clientes_registrados:
-                print("No hay clientes registrados en el sistema.")
-            else:
-                # Show client selection for viewing reservations
-                print("Clientes registrados:")
-                for i, cliente in enumerate(Cliente.clientes_registrados, 1):
-                    print(f"{i}. {cliente.nombre}")
-                try:
-                    indice = int(input("Seleccione el número del cliente: ")) - 1
-                    if 0 <= indice < len(Cliente.clientes_registrados):
-                        cliente_seleccionado = Cliente.clientes_registrados[indice]
-                        cliente_seleccionado.mostrar_reservas_de_un_cliente()
-                    else:
-                        print("Selección inválida.")
-                except ValueError:
-                    print("Entrada inválida.")
-
-        elif option == "4":
-            print("====== LISTADO DE TODOS LOS CLIENTES ======")
-            if not Cliente.clientes_registrados:
-                print("No hay clientes registrados.")
-            else:
-                for i, cliente in enumerate(Cliente.clientes_registrados, 1):
-                    print(f"{i}. {cliente}")
-
-        elif option == "5":
-            if not Cliente.clientes_registrados:
-                print("No hay clientes registrados.")
+            cliente_instancia = None
+            for client in Cliente.clientes_registrados:
+                cliente_instancia = client
+            if cliente_instancia is not None:
+                cliente_instancia.mostrar_reservas_de_un_cliente()
             else:
                 doc = input("Ingrese el número de documento: ")
                 try:
@@ -183,12 +155,12 @@ def menu():
                 except ValueError:
                     print("Número de documento inválido.")
 
-        elif option == "6":
-            print("Saliendo del módulo de clientes...")
+        elif option == "4":
+            print("Adios bby")
             break
 
         else:
-            print("Opción inválida. Elija del 1 al 6.")
+            print("Escoja del 1 al 4 bobo")
 
 
 if __name__ == "__main__":

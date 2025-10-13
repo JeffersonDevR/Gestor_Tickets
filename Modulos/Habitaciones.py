@@ -19,12 +19,12 @@ class Habitacion:
 class GestorHabitaciones:
     def __init__(self):
         self.habitaciones = []
-        # Agregar habitaciones por defecto (precios en COP)
-        self.habitaciones.append(Habitacion("001", "Sencilla", 150000.0))
-        self.habitaciones.append(Habitacion("002", "Doble", 240000.0))
-        self.habitaciones.append(Habitacion("003", "Suite", 450000.0))
-        self.habitaciones.append(Habitacion("004", "Sencilla", 150000.0))
-        self.habitaciones.append(Habitacion("005", "Doble", 240000.0))
+        # Agregar habitaciones por defecto
+        self.habitaciones.append(Habitacion("001", "Sencilla", 50.0))
+        self.habitaciones.append(Habitacion("002", "Doble", 80.0))
+        self.habitaciones.append(Habitacion("003", "Suite", 150.0))
+        self.habitaciones.append(Habitacion("004", "Sencilla", 50.0))
+        self.habitaciones.append(Habitacion("005", "Doble", 80.0))
 
     def agregar_habitacion(self):
         print("\n--- Registrar nueva habitación ---")
@@ -111,7 +111,6 @@ class GestorHabitaciones:
 
 
 def menu():
-    """Admin room management menu"""
     gestor = GestorHabitaciones()
     opcion = ""
 
