@@ -111,7 +111,6 @@ class GestorHabitaciones:
 
 
 def menu():
-    """Admin room management menu"""
     gestor = GestorHabitaciones()
     opcion = ""
 

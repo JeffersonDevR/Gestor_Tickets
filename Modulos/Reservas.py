@@ -4,9 +4,6 @@ from Modulos.Habitaciones import GestorHabitaciones
 # Instancia global del gestor de habitaciones
 gestor_habitaciones = GestorHabitaciones()
 
-# Instancia global del sistema de reservas para persistencia
-sistema_reservas_global = None
-
 class Reservas:
     def __init__(self):
         # Aquí se guardan todas las reservas en formato de diccionario
@@ -24,14 +21,6 @@ class Reservas:
             }
             self.lista_reservas.append(reserva)
             gestor_habitaciones.ocupar_habitacion(habitacion)  # ocupar la habitación
-
-            # Update client's reservation history
-            from Modulos.Clientes import Cliente
-            for cliente_obj in Cliente.clientes_registrados:
-                if cliente_obj.nombre.lower() == cliente.lower():
-                    cliente_obj.historial_de_reservas.append(reserva)
-                    break
-
             print(f"Reserva creada: {cliente} en habitación {habitacion} el {fecha} a las {hora}.")
         else:
             print("Habitación no disponible.")
@@ -50,16 +39,6 @@ class Reservas:
                     reserva["fecha"] = nueva_fecha
                     reserva["hora"] = nueva_hora
                     gestor_habitaciones.ocupar_habitacion(nueva_habitacion)
-
-                    # Update client's reservation history
-                    from Modulos.Clientes import Cliente
-                    for cliente_obj in Cliente.clientes_registrados:
-                        if cliente_obj.nombre.lower() == cliente.lower():
-                            # Remove old reservation and add updated one
-                            cliente_obj.historial_de_reservas = [r for r in cliente_obj.historial_de_reservas if not (r["cliente"] == cliente and r["habitacion"] == reserva["habitacion"])]
-                            cliente_obj.historial_de_reservas.append(reserva)
-                            break
-
                     print(f"Reserva modificada para {cliente}.")
                 else:
                     print("Nueva habitación no disponible.")
@@ -94,6 +73,59 @@ class Reservas:
                 print(f"- Cliente: {r['cliente']}, Habitación: {r['habitacion']}, Fecha: {r['fecha']}, Hora: {r['hora']}")
                 
 def menu():
+    sistema = Reservas()  # Crear el objeto del sistema de reservas
+
+    while True:
+        print("=== Sistema de Gestión de Reservas ===")
+        print("1. Crear reserva")
+        print("2. Modificar reserva")
+        print("3. Cancelar reserva")
+        print("4. Mostrar todas las reservas")
+        print("5. Mostrar habitaciones disponibles")
+        print("6. Salir")
+
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == "1":
+            cliente = input("Nombre del cliente: ")
+            habitaciones_disponibles = gestor_habitaciones.get_habitaciones_disponibles()
+            print("Las habitaciones disponibles son : ", habitaciones_disponibles)
+            habitacion = input("Número de habitación: ")
+            fecha = input("Fecha (dd/mm/aaaa): ")
+            hora = input("Hora: ")
+            sistema.crear_reserva(cliente, habitacion, fecha, hora)
+
+        elif opcion == "2":
+            cliente = input("Nombre del cliente: ")
+            habitaciones_disponibles = gestor_habitaciones.get_habitaciones_disponibles()
+            print("Las habitaciones disponibles son : ", habitaciones_disponibles)
+            nueva_habitacion = input("Nueva habitación: ")
+            nueva_fecha = input("Nueva fecha (dd/mm/aaaa): ")
+            nueva_hora = input("Nueva hora: ")
+            sistema.modificar_reserva(cliente, nueva_habitacion, nueva_fecha, nueva_hora)
+
+        elif opcion == "3":
+            cliente = input("Nombre del cliente: ")
+            sistema.cancelar_reserva(cliente)
+
+        elif opcion == "4":
+            sistema.mostrar_reservas()
+
+        elif opcion == "5":
+            habitaciones_disponibles = gestor_habitaciones.get_habitaciones_disponibles()
+            print("Habitaciones disponibles:", habitaciones_disponibles)
+
+        elif opcion == "6":
+            print("Saliendo del sistema...")
+            break
+
+        else:
+            print("Opción no válida, intente de nuevo.")
+
+        print()
+
+
+def menu_reservas():
     sistema = Reservas()  # Crear el objeto del sistema de reservas
 
     while True:
