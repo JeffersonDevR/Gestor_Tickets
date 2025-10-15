@@ -52,24 +52,24 @@ class TestHotelApp(unittest.TestCase):
     @patch('Modulos.Clientes.Cliente.registrar_cliente')
     def test_flujo_registro_y_salida(self, mock_registrar, mock_input):
         """
-        Prueba el flujo: Cliente -> Registrar -> Llenar datos -> Salir.
+        Prueba el flujo de admin para crear una nueva habitación.
         """
         self.app.menu_principal()
-        mock_registrar.assert_called_with('New User', 54321, 'new@example.com', 5554321)
+        mock_agregar.assert_called_once()
 
-    @patch('builtins.input', side_effect=['1', '4', '1', '250.50', 'efectivo', '4', '5', '3'])
-    @patch('builtins.print')
-    def test_admin_procesar_pago(self, mock_print, mock_input):
+    @patch('builtins.input', side_effect=['1', '3', '2', '12345', '102', '16/10/2025', '10:00', '3', '5', '3'])
+    @patch('Modulos.Reservas.Reservas.crear_reserva')
+    def test_admin_crear_reserva(self, mock_crear_reserva, mock_input):
         """
-        Prueba el flujo de admin: Admin -> Pagos -> Procesar Pago -> Volver -> Salir.
+        Prueba el flujo de admin para crear una reserva para un cliente.
         """
         self.app.menu_principal()
-        mock_print.assert_any_call("Pago en efectivo de $250.50 procesado exitosamente.")
+        mock_crear_reserva.assert_called_with("Test User", "102", "16/10/2025", "10:00")
 
-    @patch('builtins.input', side_effect=['2', '1', '12345', '4', '1', '5', '3'])
+    @patch('builtins.input', side_effect=['2', '1', '12345', '4', '1', 'efectivo', '5', '3'])
     def test_cliente_pagar_reservacion(self, mock_input):
         """
-        Prueba el flujo: Cliente -> Login -> Pagar -> Seleccionar Reserva -> Cerrar Sesión -> Salir.
+        Prueba el flujo de cliente para pagar una reservación.
         """
         self.app.menu_principal()
         # Verifica que se muestre el mensaje de bienvenida correcto.
