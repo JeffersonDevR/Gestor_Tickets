@@ -87,20 +87,22 @@ class GestorHabitaciones:
                 h.mostrar_info()
         print()
 
-gestor = GestorHabitaciones()
-opcion = ""
+if __name__ == "__main__":
+    gestor = GestorHabitaciones()
+    opcion = ""
 
-while opcion != "7":
-    print("====== SISTEMA DE GESTIÓN DE HABITACIONES ======")
-    print("1. Registrar habitación")
-    print("2. Mostrar todas las habitaciones")
-    print("3. Cambiar estado de habitación (disponibilidad en tiempo real)")
-    print("4. Buscar habitaciones por estado")
-    print("5. Buscar habitaciones por tipo")
-    print("6. Clasificar habitaciones por tarifa")
-    print("7. Salir")
-    opcion = input("Seleccione una opción: ")
+    while opcion != "7":
+        print("====== SISTEMA DE GESTIÓN DE HABITACIONES ======")
+        print("1. Registrar habitación")
+        print("2. Mostrar todas las habitaciones")
+        print("3. Cambiar estado de habitación (disponibilidad en tiempo real)")
+        print("4. Buscar habitaciones por estado")
+        print("5. Buscar habitaciones por tipo")
+        print("6. Clasificar habitaciones por tarifa")
+        print("7. Salir")
+        opcion = input("Seleccione una opción: ")
 
+<<<<<<< HEAD
     if opcion == "1":
         gestor.agregar_habitacion()
     elif opcion == "2":
@@ -117,3 +119,21 @@ while opcion != "7":
         print("Saliendo...")
     else:
         print("Opción no válida. Intente nuevamente.\n")
+=======
+        if opcion == "1":
+            gestor.agregar_habitacion()
+        elif opcion == "2":
+            gestor.mostrar_todas()
+        elif opcion == "3":
+            gestor.cambiar_estado()
+        elif opcion == "4":
+            gestor.buscar_por_estado()
+        elif opcion == "5":
+            gestor.buscar_por_tipo()
+        elif opcion == "6":
+            gestor.ordenar_por_tarifa()
+        elif opcion == "7":
+            print("Saliendo...")
+        else:
+            print("Opción no válida. Intente nuevamente.\n")
+>>>>>>> 25806a2 (feat: Implement main menu and refactor Pagos module)
