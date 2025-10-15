@@ -54,7 +54,7 @@ class HotelApp:
             elif opcion == "2":
                 self.admin_gestionar_habitaciones()
             elif opcion == "3":
-                self.reservas.mostrar_reservas()
+                self.admin_gestionar_reservas()
             elif opcion == "4":
                 self.admin_gestionar_pagos()
             elif opcion == "5":
@@ -75,16 +75,63 @@ class HotelApp:
             Cliente.actualizar_info_clientes(nombre_cliente)
 
     def admin_gestionar_habitaciones(self):
-        self.gestor_habitaciones.mostrar_todas()
-        print("Para más opciones de gestión de habitaciones, el módulo original es interactivo.")
+        while True:
+            print("\n--- Gestión de Habitaciones (Admin) ---")
+            print("1. Ver todas las habitaciones")
+            print("2. Agregar nueva habitación")
+            print("3. Cambiar estado de una habitación")
+            print("4. Volver al panel de administración")
+            opcion = input("Seleccione una opción: ")
+
+            if opcion == "1":
+                self.gestor_habitaciones.mostrar_todas()
+            elif opcion == "2":
+                self.gestor_habitaciones.agregar_habitacion()
+            elif opcion == "3":
+                self.gestor_habitaciones.cambiar_estado()
+            elif opcion == "4":
+                break
+            else:
+                print("Opción no válida.")
+
+    def admin_gestionar_reservas(self):
+        while True:
+            print("\n--- Gestión de Reservas (Admin) ---")
+            print("1. Ver todas las reservas")
+            print("2. Crear nueva reserva para un cliente")
+            print("3. Volver al panel de administración")
+            opcion = input("Seleccione una opción: ")
+            if opcion == "1":
+                self.reservas.mostrar_reservas()
+            elif opcion == "2":
+                self.admin_crear_reserva()
+            elif opcion == "3":
+                break
+            else:
+                print("Opción no válida.")
+
+    def admin_crear_reserva(self):
+        print("\n--- Creando Nueva Reserva (Admin) ---")
+        try:
+            id_cliente = int(input("Ingrese el N° de identificación del cliente: "))
+            cliente = next((c for c in Cliente.clientes_registrados if c.n_identificacion == id_cliente), None)
+            if not cliente:
+                print("Cliente no encontrado.")
+                return
+
+            print("Habitaciones disponibles:", habitaciones_disponibles)
+            num_hab = input("Seleccione el número de la habitación: ")
+            fecha = input("Fecha (dd/mm/aaaa): ")
+            hora = input("Hora: ")
+            self.reservas.crear_reserva(cliente.nombre, num_hab, fecha, hora)
+        except ValueError:
+            print("El N° de identificación debe ser un número.")
 
     def admin_gestionar_pagos(self):
         while True:
             print("\n--- Gestión de Pagos (Admin) ---")
             print("1. Procesar un nuevo pago")
-            print("2. Actualizar un pago (No implementado en el módulo original)")
-            print("3. Eliminar un pago (No implementado en el módulo original)")
-            print("4. Volver al panel de administración")
+            print("2. Volver al panel de administración")
             opcion = input("Seleccione una opción: ")
 
             if opcion == "1":
@@ -93,9 +140,7 @@ class HotelApp:
                     self.realizar_pago(monto)
                 except ValueError:
                     print("Monto inválido.")
-            elif opcion in ["2", "3"]:
-                print("Esta funcionalidad no está soportada por el módulo de Pagos.")
-            elif opcion == "4":
+            elif opcion == "2":
                 break
             else:
                 print("Opción no válida.")
