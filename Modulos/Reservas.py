@@ -6,7 +6,7 @@ class Reservas:
         # Aquí se guardan todas las reservas en formato de diccionario
         self.lista_reservas = []
 
-    # 1. Crear reservas 
+    # 1. Crear reservas
     def crear_reserva(self, cliente, habitacion, fecha, hora):
         if habitacion in habitaciones_disponibles:
             reserva = {
@@ -58,7 +58,7 @@ class Reservas:
             print("\nLista de reservas:")
             for r in self.lista_reservas:
                 print(f"- Cliente: {r['cliente']}, Habitación: {r['habitacion']}, Fecha: {r['fecha']}, Hora: {r['hora']}")
-                
+
 def menu():
     sistema = Reservas()  # Crear el objeto del sistema de reservas
 
@@ -108,5 +108,6 @@ def menu():
 
         print()
 
-# Ejecutar el menú
-menu()
+if __name__ == "__main__":
+    # Ejecutar el menú
+    menu()
