@@ -71,7 +71,7 @@ class HotelApp:
             elif opcion == "2":
                 self.admin_gestionar_habitaciones()
             elif opcion == "3":
-                self.admin_gestionar_reservas()
+                self.reservas.mostrar_reservas()
             elif opcion == "4":
                 self.admin_gestionar_pagos()
             elif opcion == "5":
