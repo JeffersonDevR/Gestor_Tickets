@@ -1,4 +1,3 @@
-# Importamos Pydantic para la validación de datos y otros módulos necesarios.
 from pydantic import BaseModel, validator, Field
 from typing import ClassVar
 from abc import ABC, abstractmethod
@@ -30,7 +29,6 @@ class PagoEnEfectivo(Pago):
         return True
 
 
-# Definimos una clase para pagos con tarjeta que también hereda de Pago.
 class PagoConTarjeta(Pago):
    
     numero_tarjeta: str
@@ -51,34 +49,17 @@ class PagoConTarjeta(Pago):
         return v
 
     def procesar(self) -> bool:
-        """
-        Procesa un pago con tarjeta.
-        Simula una validación con una pasarela de pagos.
-        """
         print(f"Procesando pago de ${self.monto:,.2f} con tarjeta {self.numero_tarjeta[-4:]}...")
-        # Simulación de un procesamiento exitoso
         self.estado = "completado"
         print("Pago con tarjeta procesado exitosamente.")
         return True
 
-# Definimos una clase para gestionar los pagos.
+
 class GestorDePagos:
-    """
-    Gestiona y procesa los diferentes tipos de pagos.
-    """
     def __init__(self):
-        self.pagos_procesados: ClassVar[list] = []
+        self.pagos_procesados: ClassVar[list] = [] # type: ignore
 
     def realizar_pago(self, pago: Pago) -> bool:
-        """
-        Realiza un pago utilizando el método de pago proporcionado.
-
-        Args:
-            pago (Pago): Una instancia de una subclase de Pago.
-
-        Returns:
-            bool: True si el pago fue exitoso, False en caso contrario.
-        """
         try:
             if pago.procesar():
                 self.pagos_procesados.append(pago)
