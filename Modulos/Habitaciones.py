@@ -1,118 +1,109 @@
 class Habitacion:
+    """
+    Clase que representa una habitación del hotel.
+    """
     def __init__(self, numero, tipo, tarifa):
+        """
+        Inicializa un nuevo objeto Habitacion.
+
+        Args:
+            numero (str): El número de la habitación.
+            tipo (str): El tipo de habitación (ej. Sencilla, Doble, Suite).
+            tarifa (float): El precio por noche.
+        """
         self.numero = numero
         self.tipo = tipo
         self.tarifa = float(tarifa)
-        self.estado = "disponible"
+        self.estado = "disponible"  # Por defecto, una habitación siempre está disponible al crearla.
 
     def mostrar_info(self):
-        print(f"Habitación {self.numero} | Tipo: {self.tipo} | Tarifa: ${self.tarifa:.2f} | Estado: {self.estado}")
+        """
+        Imprime la información detallada de la habitación.
+        """
+        print(f"Habitación {self.numero} | Tipo: {self.tipo} | Tarifa: ${self.tarifa:,.2f} | Estado: {self.estado}")
 
     def cambiar_estado(self, nuevo_estado):
+        """
+        Cambia el estado de la habitación.
+
+        Args:
+            nuevo_estado (str): El nuevo estado ('disponible', 'ocupada', 'mantenimiento').
+        """
         if nuevo_estado in ["disponible", "ocupada", "mantenimiento"]:
             self.estado = nuevo_estado
             print(f"Habitación {self.numero} ahora está '{nuevo_estado}'.")
         else:
-            print("Estado no válido. Usa: disponible, ocupada o mantenimiento.")
+            print("Estado no válido. Use: 'disponible', 'ocupada' o 'mantenimiento'.")
 
 
 class GestorHabitaciones:
+    """
+    Clase para gestionar el conjunto de habitaciones del hotel.
+    """
     def __init__(self):
+        """
+        Inicializa el gestor de habitaciones.
+        """
         self.habitaciones = []
 
-    def agregar_habitacion(self):
-        print("\n--- Registrar nueva habitación ---")
-        numero = input("Ingrese el número de habitación: ")
-        tipo = input("Ingrese el tipo (Sencilla, Doble, Suite, etc.): ")
-        tarifa = input("Ingrese la tarifa por noche: ")
+    def agregar_habitacion(self, numero, tipo, tarifa):
+        """
+        Agrega una nueva habitación al hotel.
 
-        nueva = Habitacion(numero, tipo, tarifa)
-        self.habitaciones.append(nueva)
-        print(f"Habitación {numero} registrada correctamente.\n")
+        Args:
+            numero (str): Número de la nueva habitación.
+            tipo (str): Tipo de la nueva habitación.
+            tarifa (float): Tarifa de la nueva habitación.
+        """
+        # Verifica si ya existe una habitación con el mismo número.
+        if any(h.numero == numero for h in self.habitaciones):
+            print(f"La habitación {numero} ya está registrada.")
+            return
+
+        nueva_habitacion = Habitacion(numero, tipo, tarifa)
+        self.habitaciones.append(nueva_habitacion)
+        print(f"Habitación {numero} registrada correctamente.")
 
     def mostrar_todas(self):
-        print("\n--- Listado de habitaciones ---")
+        """
+        Muestra la información de todas las habitaciones registradas.
+        """
         if not self.habitaciones:
             print("No hay habitaciones registradas.")
         else:
+            print("\n--- Listado de habitaciones ---")
             for hab in self.habitaciones:
                 hab.mostrar_info()
-        print()
 
-    def cambiar_estado(self):
-        print("\n--- Cambiar estado de habitación ---")
-        numero = input("Ingrese el número de habitación: ")
-        for hab in self.habitaciones:
-            if hab.numero == numero:
-                print(f"Estado actual: {hab.estado}")
-                nuevo = input("Nuevo estado (disponible / ocupada / mantenimiento): ").lower()
-                hab.cambiar_estado(nuevo)
-                return
-        print("No se encontró esa habitación.\n")
+    def buscar_por_estado(self, estado):
+        """
+        Busca y muestra habitaciones por un estado específico.
 
-    def buscar_por_estado(self):
-        print("\n--- Buscar habitaciones por estado ---")
-        estado = input("Ingrese el estado (disponible / ocupada / mantenimiento): ").lower()
-        filtradas = [h for h in self.habitaciones if h.estado == estado]
+        Args:
+            estado (str): El estado a buscar.
 
-        if filtradas:
-            print(f"\nHabitaciones con estado '{estado}':")
-            for h in filtradas:
-                h.mostrar_info()
-        else:
-            print("No hay habitaciones con ese estado.")
-        print()
+        Returns:
+            list: Una lista de habitaciones que coinciden con el estado.
+        """
+        return [h for h in self.habitaciones if h.estado == estado]
 
-    def buscar_por_tipo(self):
-        print("\n--- Buscar habitaciones por tipo ---")
-        tipo = input("Ingrese el tipo (Sencilla / Doble / Suite, etc.): ")
-        filtradas = [h for h in self.habitaciones if h.tipo.lower() == tipo.lower()]
+    def buscar_por_tipo(self, tipo):
+        """
+        Busca y muestra habitaciones por un tipo específico.
 
-        if filtradas:
-            print(f"\nHabitaciones tipo '{tipo}':")
-            for h in filtradas:
-                h.mostrar_info()
-        else:
-            print("No hay habitaciones de ese tipo.")
-        print()
+        Args:
+            tipo (str): El tipo de habitación a buscar.
+
+        Returns:
+            list: Una lista de habitaciones que coinciden con el tipo.
+        """
+        return [h for h in self.habitaciones if h.tipo.lower() == tipo.lower()]
 
     def ordenar_por_tarifa(self):
-        print("\n--- Clasificación por tarifa ---")
-        if not self.habitaciones:
-            print("No hay habitaciones registradas.")
-        else:
-            ordenadas = sorted(self.habitaciones, key=lambda x: x.tarifa)
-            for h in ordenadas:
-                h.mostrar_info()
-        print()
+        """
+        Devuelve una lista de habitaciones ordenadas por tarifa.
 
-gestor = GestorHabitaciones()
-opcion = ""
-
-while opcion != "7":
-    print("====== SISTEMA DE GESTIÓN DE HABITACIONES ======")
-    print("1. Registrar habitación")
-    print("2. Mostrar todas las habitaciones")
-    print("3. Cambiar estado de habitación (disponibilidad en tiempo real)")
-    print("4. Buscar habitaciones por estado")
-    print("5. Buscar habitaciones por tipo")
-    print("6. Clasificar habitaciones por tarifa")
-    print("7. Salir")
-    opcion = input("Seleccione una opción: ")
-
-    if opcion == "1":
-        gestor.agregar_habitacion()
-    elif opcion == "2":
-        gestor.mostrar_todas()
-    elif opcion == "3":
-        gestor.cambiar_estado()
-    elif opcion == "4":
-        gestor.buscar_por_estado()
-    elif opcion == "5":
-        gestor.buscar_por_tipo()
-    elif opcion == "6":
-        gestor.ordenar_por_tarifa()
-    elif opcion == "7":
-        print("Saliendo...")
-    else:
-        print("Opción no válida. Intente nuevamente.\n")
+        Returns:
+            list: Lista de habitaciones ordenadas.
+        """
+        return sorted(self.habitaciones, key=lambda x: x.tarifa)

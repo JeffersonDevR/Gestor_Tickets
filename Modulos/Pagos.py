@@ -1,64 +1,106 @@
-#Procesamiento de pagos de manera asincrona, validando medios de pago, estado de las transacciones y confirmaciones automaticas
+# Importamos Pydantic para la validación de datos y otros módulos necesarios.
+from pydantic import BaseModel, validator, Field
+from typing import ClassVar
 from abc import ABC, abstractmethod
-from enum import Enum
+from datetime import datetime
 
-# class MetodoDePago(Enum):
-#     TARJETA_CREDITO = "tarjeta_credito"
-#     TRANSFERENCIA = "transferencia"
-#     EFECTIVO = "efectivo"
+# Definimos una clase base para los pagos que hereda de BaseModel de Pydantic.
+class Pago(BaseModel, ABC):
+    """
+    Clase base para representar un pago.
 
-class Pago(ABC):
+    Atributos:
+        monto (float): La cantidad del pago.
+        fecha (datetime): La fecha y hora en que se procesó el pago.
+        estado (str): El estado actual del pago ('pendiente', 'completado', 'fallido').
+    """
+    monto: float = Field(..., gt=0, description="El monto debe ser un número positivo.")
+    fecha: datetime = Field(default_factory=datetime.now)
+    estado: str = "pendiente"
 
-    def __init__(self,ammount:float,date):
-        self.ammount = ammount
-        self.date = date
-        self.status = "pending"
-
+    # Método abstracto que debe ser implementado por las subclases para procesar el pago.
     @abstractmethod
-    def process(self) -> bool:
+    def procesar(self) -> bool:
+        """Procesa el pago y retorna True si fue exitoso, de lo contrario False."""
         pass
 
-    @abstractmethod
-    def validate(self) -> bool:
-        pass
-
-
-
+# Definimos una clase para pagos en efectivo que hereda de la clase base Pago.
 class PagoEnEfectivo(Pago):
+    """
+    Representa un pago realizado en efectivo.
+    """
+    def procesar(self) -> bool:
+        """
+        Procesa un pago en efectivo.
+        Para los pagos en efectivo, el procesamiento es directo y se considera exitoso.
+        """
+        self.estado = "completado"
+        print(f"Pago en efectivo de ${self.monto:,.2f} procesado exitosamente.")
+        return True
 
-    def __init__(self, ammount, date):
-        super().__init__(ammount, date)
-        
-
-    def validate(self) -> bool:
-        return self.ammount > 0
-    
-    def process(self) -> bool:
-        if not self.validate():
-            return False
-        print(f"Pago en efectivo realizado: ${self.ammount}")
-        self.status = "completed" 
-        return True  
-
+# Definimos una clase para pagos con tarjeta que también hereda de Pago.
 class PagoConTarjeta(Pago):
+    """
+    Representa un pago realizado con tarjeta de crédito/débito.
 
-    def __init__(self, ammount, date,card_number:str,cvv:str):
-        super().__init__(ammount, date)
-        self.card_number - card_number
-        self.cvv = cvv
+    Atributos:
+        numero_tarjeta (str): El número de la tarjeta, que debe tener 16 dígitos.
+        cvv (str): El código de seguridad de la tarjeta, que debe tener 3 dígitos.
+    """
+    numero_tarjeta: str
+    cvv: str
 
-    def validate(self) -> bool:
+    # Usamos un validador de Pydantic para asegurar que el número de tarjeta tenga 16 dígitos.
+    @validator('numero_tarjeta')
+    def validar_numero_tarjeta(cls, v):
+        if len(v) != 16 or not v.isdigit():
+            raise ValueError('El número de tarjeta debe tener 16 dígitos numéricos.')
+        return v
 
-        if len(self.card_number) != 26:
-            return False
-        if len(self.cvv) != 3:
-            return False
+    # Usamos otro validador para el CVV, que debe tener 3 dígitos.
+    @validator('cvv')
+    def validar_cvv(cls, v):
+        if len(v) != 3 or not v.isdigit():
+            raise ValueError('El CVV debe tener 3 dígitos numéricos.')
+        return v
+
+    def procesar(self) -> bool:
+        """
+        Procesa un pago con tarjeta.
+        Simula una validación con una pasarela de pagos.
+        """
+        print(f"Procesando pago de ${self.monto:,.2f} con tarjeta {self.numero_tarjeta[-4:]}...")
+        # Simulación de un procesamiento exitoso
+        self.estado = "completado"
+        print("Pago con tarjeta procesado exitosamente.")
         return True
-        
-    def process(self) -> bool:
-        if not self.validate():
+
+# Definimos una clase para gestionar los pagos.
+class GestorDePagos:
+    """
+    Gestiona y procesa los diferentes tipos de pagos.
+    """
+    def __init__(self):
+        self.pagos_procesados: ClassVar[list] = []
+
+    def realizar_pago(self, pago: Pago) -> bool:
+        """
+        Realiza un pago utilizando el método de pago proporcionado.
+
+        Args:
+            pago (Pago): Una instancia de una subclase de Pago.
+
+        Returns:
+            bool: True si el pago fue exitoso, False en caso contrario.
+        """
+        try:
+            if pago.procesar():
+                self.pagos_procesados.append(pago)
+                return True
+            else:
+                pago.estado = "fallido"
+                print("El pago no pudo ser procesado.")
+                return False
+        except ValueError as e:
+            print(f"Error de validación: {e}")
             return False
-        print(f"Pago con tarjeta completado: ${self.amount}")
-        self.status = "completed"
-        return True
-    
