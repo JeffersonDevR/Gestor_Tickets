@@ -1,17 +1,7 @@
 class Cliente:
 
     clientes_registrados = []
-
-    def __init__(self, nombre, n_identificacion, correo, n_telefono):
-        """
-        Inicializa un nuevo objeto Cliente.
-
-        Args:
-            nombre (str): El nombre completo del cliente.
-            n_identificacion (int): El número de identificación del cliente.
-            correo (str): El correo electrónico del cliente.
-            n_telefono (int): El número de teléfono del cliente.
-        """
+    def __init__(self,nombre,n_identificacion,correo,n_telefono):
         self.nombre = nombre
         self.n_identificacion = n_identificacion
         self.correo = correo
@@ -115,42 +105,41 @@ class Cliente:
         return f"Cliente: {self.nombre}||\nIdentificación: {self.n_identificacion}|| Correo electrónico: {self.correo}|| Número de contacto: {self.n_telefono}"
 
 
-if __name__ == "__main__":
-    while True:
-        option=input("Ingrese una opción: ")
-        if option=="1":
-            print("Ingrese sus datos, para hacer el registro: ")
-            name= input("Ingrese su nombre completo(con apellidos): ")
-            number_docu=int(input("Ingrese su número de identificación: "))
-            email_electro=input("Ingrese su correo electrónico: ")
-            iphone=int(input("Ingrese su número de teléfono: "))
-            Cliente.registrar_cliente(name,number_docu,email_electro,iphone)
-            for clientes in Cliente.clientes_registrados:
-                print(clientes)
+while True:
+    option=input("Ingrese una opción: ")
+    if option=="1":
+        print("Ingrese sus datos, para hacer el registro: ")
+        name= input("Ingrese su nombre completo(con apellidos): ")
+        number_docu=int(input("Ingrese su número de identificación: "))
+        email_electro=input("Ingrese su correo electrónico: ")
+        iphone=int(input("Ingrese su número de teléfono: "))
+        Cliente.registrar_cliente(name,number_docu,email_electro,iphone)
+        for clientes in Cliente.clientes_registrados:
+            print(clientes)
 
-        elif option=="2":
-
-            if not Cliente.clientes_registrados:
-                print("No hay clientes registrados hasta el momento en el sistema")
-            else:
-                print("Ingrese el nombre del cliente que desea buscar: ")
-                nombre_cliente=input("")
-                Cliente.actualizar_info_clientes(nombre_cliente)
-
-
-        elif option=="3":
-            cliente_instancia=None
-            for client in Cliente.clientes_registrados:
-                 cliente_instancia=client
-            if cliente_instancia is not None:
-                cliente_instancia.mostrar_reservas_de_un_cliente()
-            else:
-                print("No hay clientes registrados en el sistema para ver sus reservas.")
-
-        elif option=="4":
-            print("Adios bby")
-            break
+    elif option=="2":
+        
+        if not Cliente.clientes_registrados:
+            print("No hay clientes registrados hasta el momento en el sistema")
         else:
-            print("Escoja del 1 al 3 bobo")
+            print("Ingrese el nombre del cliente que desea buscar: ")
+            nombre_cliente=input("")
+            Cliente.actualizar_info_clientes(nombre_cliente)
+        
+
+    elif option=="3":
+        cliente_instancia=None
+        for client in Cliente.clientes_registrados:
+             cliente_instancia=client
+        if cliente_instancia is not None:
+            cliente_instancia.mostrar_reservas_de_un_cliente()
+        else:
+            print("No hay clientes registrados en el sistema para ver sus reservas.")
+
+    elif option=="4":
+        print("Adios bby")
+        break
+    else:
+        print("Escoja del 1 al 3 bobo")
 
 

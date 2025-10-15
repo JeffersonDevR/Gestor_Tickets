@@ -21,7 +21,7 @@ class GestorHabitaciones:
     def __init__(self):
         self.habitaciones = []
 
-    def agregar_habitacion(self,numero,tipo,tarifa):
+    def agregar_habitacion(self):
         print("\n--- Registrar nueva habitación ---")
         numero = input("Ingrese el número de habitación: ")
         tipo = input("Ingrese el tipo (Sencilla, Doble, Suite, etc.): ")
@@ -87,39 +87,33 @@ class GestorHabitaciones:
                 h.mostrar_info()
         print()
 
+gestor = GestorHabitaciones()
+opcion = ""
 
-# ====== MENÚ DE PRUEBA ======
-def menu_habitaciones():
-    gestor = GestorHabitaciones()
-    opcion = ""
+while opcion != "7":
+    print("====== SISTEMA DE GESTIÓN DE HABITACIONES ======")
+    print("1. Registrar habitación")
+    print("2. Mostrar todas las habitaciones")
+    print("3. Cambiar estado de habitación (disponibilidad en tiempo real)")
+    print("4. Buscar habitaciones por estado")
+    print("5. Buscar habitaciones por tipo")
+    print("6. Clasificar habitaciones por tarifa")
+    print("7. Salir")
+    opcion = input("Seleccione una opción: ")
 
-    while opcion != "7":
-        print("\n====== SISTEMA DE GESTIÓN DE HABITACIONES ======")
-        print("1. Registrar habitación")
-        print("2. Mostrar todas las habitaciones")
-        print("3. Cambiar estado de habitación (disponibilidad en tiempo real)")
-        print("4. Buscar habitaciones por estado")
-        print("5. Buscar habitaciones por tipo")
-        print("6. Clasificar habitaciones por tarifa")
-        print("7. Salir")
-        opcion = input("Seleccione una opción: ")
-
-        if opcion == "1":
-            gestor.agregar_habitacion("101",'Sencilla',150000)
-        elif opcion == "2":
-            gestor.mostrar_todas()
-        elif opcion == "3":
-            gestor.cambiar_estado()
-        elif opcion == "4":
-            gestor.buscar_por_estado()
-        elif opcion == "5":
-            gestor.buscar_por_tipo()
-        elif opcion == "6":
-            gestor.ordenar_por_tarifa()
-        elif opcion == "7":
-            print("Saliendo del sistema de habitaciones...")
-        else:
-            print("Opción no válida. Intente nuevamente.\n")
-
-if __name__ == "__main__":
-    menu_habitaciones()
+    if opcion == "1":
+        gestor.agregar_habitacion()
+    elif opcion == "2":
+        gestor.mostrar_todas()
+    elif opcion == "3":
+        gestor.cambiar_estado()
+    elif opcion == "4":
+        gestor.buscar_por_estado()
+    elif opcion == "5":
+        gestor.buscar_por_tipo()
+    elif opcion == "6":
+        gestor.ordenar_por_tarifa()
+    elif opcion == "7":
+        print("Saliendo...")
+    else:
+        print("Opción no válida. Intente nuevamente.\n")
