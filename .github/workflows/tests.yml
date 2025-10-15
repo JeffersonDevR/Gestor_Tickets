@@ -1,54 +1,61 @@
-name: Testing of CI/CD with GitHub Actions
+name: CI/CD Testing for Gestor_Tickets
 
 on:
   push:
-    branches: [ desarrollo ]
+    branches: [desarrollo]
   pull_request:
-    branches: [ produccion ]
+    branches: [produccion]
     types: [closed]
 
 jobs:
- 
+  # 🧪 Tests on desarrollo branch
   test_desarrollo:
     if: github.ref == 'refs/heads/desarrollo'
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pydantic  # ensures it's installed even if missing in requirements.txt
 
-    - name: Run unit tests (desarrollo)
-      run: |
-        python -m unittest discover -s tests -p "test_*.py" -v
+      - name: Verify installed packages
+        run: pip list
 
+      - name: Run unit tests (desarrollo)
+        run: python -m unittest discover -s tests -p "test_*.py" -v
+
+  # 🚀 Tests after merge to produccion
   test_produccion:
     if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'produccion' && github.event.pull_request.head.ref == 'desarrollo'
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pydantic
 
-    - name: Run unit tests (merge to produccion)
-      run: |
-        python -m unittest discover -s tests -p "test_*.py" -v
+      - name: Verify installed packages
+        run: pip list
+
+      - name: Run unit tests (merge to produccion)
+        run: python -m unittest discover -s tests -p "test_*.py" -v
