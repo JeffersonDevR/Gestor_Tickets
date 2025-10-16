@@ -257,7 +257,9 @@ class HotelApp:
             print(f"{i+1}. Habitación: {reserva['habitacion']}, Fecha: {reserva['fecha']}, Hora: {reserva['hora']}")
 
     def pagar_reservacion_cliente(self, cliente):
-        reservas_cliente = [r for r in self.reservas.lista_reservas if r['cliente'] == cliente.nombre]
+        #Se tiene que agregar o implementar pago por el historial_de_reservas
+        # self.historial_de_reservas = []
+        reservas_cliente = [r for r in cliente.historial_de_reservas if r['cliente'] == cliente.nombre]
         if not reservas_cliente:
             print("No tiene reservas para pagar.")
             return
