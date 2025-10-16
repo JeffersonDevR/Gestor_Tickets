@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Modulos.Clientes import Cliente
 from Modulos.Habitaciones import GestorHabitaciones, Habitacion
 from Modulos.Reservas import Reservas, habitaciones_disponibles
@@ -16,7 +15,7 @@ class HotelApp:
             self.gestor_habitaciones.habitaciones.append(Habitacion("101", "Sencilla", 150.0))
             self.gestor_habitaciones.habitaciones.append(Habitacion("102", "Doble", 250.0))
             self.gestor_habitaciones.habitaciones.append(Habitacion("201", "Suite", 500.0))
-            habitaciones_disponibles.extend(["101", "102", "201"])
+            #habitaciones_disponibles.extend(["101", "102", "201"])
 
         if not any(c.n_identificacion == 0 for c in Cliente.clientes_registrados):
              Cliente.registrar_cliente("Admin", 0, "admin@hotel.com", "0")
@@ -118,8 +117,8 @@ class HotelApp:
             if not cliente:
                 print("Cliente no encontrado.")
                 return
-
-            print("Habitaciones disponibles:", habitaciones_disponibles)
+            #apuntar a gestor de habitaciones
+            print("Habitaciones disponibles:", self.gestor_habitaciones)
             num_hab = input("Seleccione el número de la habitación: ")
             fecha = input("Fecha (dd/mm/aaaa): ")
             hora = input("Hora: ")
@@ -169,45 +168,80 @@ class HotelApp:
         except ValueError:
             print("Identificación inválida. Debe ser un número.")
 
+    
+
     def registrar_nuevo_cliente(self):
-        try:
-            print("\n--- Registro de Nuevo Cliente ---")
+        print("\n--- Registro de Nuevo Cliente ---")
+
+        while True:
             nombre = input("Nombre completo: ")
-            doc = int(input("Número de identificación: "))
+            # Usamos all() para permitir espacios entre nombres
+            if all(ch.isalpha() or ch.isspace() for ch in nombre) and nombre.strip():
+                break
+            else:
+                print("El nombre solo debe contener letras y espacios.")
+
+        
+        while True:
+            doc = input("Número de identificación: ")
+            if doc.isdigit():
+                doc = int(doc)
+                break
+            else:
+                print("El número de identificación debe ser numérico.")
+
+        
+        while True:
             correo = input("Correo electrónico: ")
-            tel = int(input("Teléfono: "))
-            nuevo_cliente = Cliente.registrar_cliente(nombre, doc, correo, tel)
-            if nuevo_cliente:
-                print("Registro exitoso. Ahora puede iniciar sesión.")
-        except ValueError:
-            print("El número de identificación y el teléfono deben ser valores numéricos.")
+            # OJO: tu condición original no funcionaba correctamente
+            if "@" in correo and (correo.endswith(".com") or correo.endswith(".co") or correo.endswith(".org")):
+                break
+            else:
+                print("El correo debe contener '@' y terminar en '.com', '.co' o '.org'.")
+
+    
+        while True:
+            tel = input("Teléfono: ")
+            if tel.isdigit():
+                tel = int(tel)
+                break
+            else:
+                print("El teléfono debe contener solo números.")
+        for c in Cliente.clientes_registrados:
+            print(c)
+        nuevo_cliente = Cliente.registrar_cliente(nombre, doc, correo, tel)
+        if nuevo_cliente:
+            print("Registro exitoso. Ahora puede iniciar sesión.")
 
     def menu_cliente_logueado(self, cliente):
         while True:
             print(f"\n--- Bienvenido, {cliente.nombre} ---")
             print("1. Ver mis datos")
-            print("2. Crear una reserva")
-            print("3. Ver mis reservas")
-            print("4. Pagar reservación")
-            print("5. Cerrar sesión")
+            print("2. Actualizar datos")
+            print("3. Crear una reserva")
+            print("4. Ver mis reservas")
+            print("5. Pagar reservación")
+            print("6. Cerrar sesión")
             opcion = input("Seleccione una opción: ")
 
             if opcion == "1":
                 print(cliente)
             elif opcion == "2":
-                self.crear_reserva_cliente(cliente)
+                Cliente.actualizar_info_clientes(cliente.nombre)
             elif opcion == "3":
-                self.ver_reservas_cliente(cliente)
+                self.crear_reserva_cliente(cliente)
             elif opcion == "4":
-                self.pagar_reservacion_cliente(cliente)
+                self.ver_reservas_cliente(cliente)
             elif opcion == "5":
+                self.pagar_reservacion_cliente(cliente)
+            elif opcion == "6":
                 break
             else:
                 print("Opción no válida.")
 
     def crear_reserva_cliente(self, cliente):
         print("\n--- Crear Nueva Reserva ---")
-        print("Habitaciones disponibles:", habitaciones_disponibles)
+        print("Habitaciones disponibles:", [h.numero for h in self.gestor_habitaciones.habitaciones])
         num_hab = input("Seleccione el número de la habitación: ")
         fecha = input("Fecha (dd/mm/aaaa): ")
         hora = input("Hora: ")
