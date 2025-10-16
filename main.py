@@ -1,3 +1,4 @@
+import asyncio
 from Modulos.Clientes import Cliente
 from Modulos.Habitaciones import GestorHabitaciones, Habitacion
 from Modulos.Reservas import Reservas, habitaciones_disponibles
@@ -15,12 +16,12 @@ class HotelApp:
             self.gestor_habitaciones.habitaciones.append(Habitacion("101", "Sencilla", 150.0))
             self.gestor_habitaciones.habitaciones.append(Habitacion("102", "Doble", 250.0))
             self.gestor_habitaciones.habitaciones.append(Habitacion("201", "Suite", 500.0))
-            #habitaciones_disponibles.extend(["101", "102", "201"])
+            habitaciones_disponibles.extend(["101", "102", "201"])
 
         if not any(c.n_identificacion == 0 for c in Cliente.clientes_registrados):
              Cliente.registrar_cliente("Admin", 0, "admin@hotel.com", "0")
 
-    def menu_principal(self):
+    async def menu_principal(self):
         while True:
             print("\n====== Menú Principal del Hotel ======")
             print("1. Entrar como Administrador")
@@ -29,16 +30,16 @@ class HotelApp:
             opcion = input("Seleccione una opción: ")
 
             if opcion == "1":
-                self.menu_admin()
+                await self.menu_admin()
             elif opcion == "2":
-                self.menu_cliente_inicial()
+                await self.menu_cliente_inicial()
             elif opcion == "3":
                 print("Gracias por usar el sistema. ¡Adiós!")
                 break
             else:
                 print("Opción no válida.")
 
-    def menu_admin(self):
+    async def menu_admin(self):
         while True:
             print("\n--- Panel de Administración ---")
             print("1. Gestionar Clientes")
@@ -55,7 +56,7 @@ class HotelApp:
             elif opcion == "3":
                 self.admin_gestionar_reservas()
             elif opcion == "4":
-                self.admin_gestionar_pagos()
+                await self.admin_gestionar_pagos()
             elif opcion == "5":
                 break
             else:
@@ -126,7 +127,7 @@ class HotelApp:
         except ValueError:
             print("El N° de identificación debe ser un número.")
 
-    def admin_gestionar_pagos(self):
+    async def admin_gestionar_pagos(self):
         while True:
             print("\n--- Gestión de Pagos (Admin) ---")
             print("1. Procesar un nuevo pago")
@@ -136,7 +137,7 @@ class HotelApp:
             if opcion == "1":
                 try:
                     monto = float(input("Ingrese el monto a pagar: "))
-                    self.realizar_pago(monto)
+                    await self.realizar_pago(monto)
                 except ValueError:
                     print("Monto inválido.")
             elif opcion == "2":
@@ -144,25 +145,25 @@ class HotelApp:
             else:
                 print("Opción no válida.")
 
-    def menu_cliente_inicial(self):
+    async def menu_cliente_inicial(self):
         print("\n--- Portal de Clientes ---")
         print("1. Iniciar sesión")
         print("2. Registrarse")
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            self.login_cliente()
+            await self.login_cliente()
         elif opcion == "2":
             self.registrar_nuevo_cliente()
         else:
             print("Opción no válida.")
 
-    def login_cliente(self):
+    async def login_cliente(self):
         try:
             identificacion = int(input("Ingrese su número de identificación: "))
             cliente_actual = next((c for c in Cliente.clientes_registrados if c.n_identificacion == identificacion), None)
             if cliente_actual:
-                self.menu_cliente_logueado(cliente_actual)
+                await self.menu_cliente_logueado(cliente_actual)
             else:
                 print("Cliente no encontrado.")
         except ValueError:
@@ -213,7 +214,7 @@ class HotelApp:
         if nuevo_cliente:
             print("Registro exitoso. Ahora puede iniciar sesión.")
 
-    def menu_cliente_logueado(self, cliente):
+    async def menu_cliente_logueado(self, cliente):
         while True:
             print(f"\n--- Bienvenido, {cliente.nombre} ---")
             print("1. Ver mis datos")
@@ -229,23 +230,35 @@ class HotelApp:
             elif opcion == "2":
                 Cliente.actualizar_info_clientes(cliente.nombre)
             elif opcion == "3":
-                self.crear_reserva_cliente(cliente)
+                await self.crear_reserva_cliente(cliente)
             elif opcion == "4":
                 self.ver_reservas_cliente(cliente)
             elif opcion == "5":
-                self.pagar_reservacion_cliente(cliente)
+                await self.pagar_reservacion_cliente(cliente)
             elif opcion == "6":
                 break
             else:
                 print("Opción no válida.")
 
-    def crear_reserva_cliente(self, cliente):
+    async def crear_reserva_cliente(self, cliente):
         print("\n--- Crear Nueva Reserva ---")
         print("Habitaciones disponibles:", [h.numero for h in self.gestor_habitaciones.habitaciones])
         num_hab = input("Seleccione el número de la habitación: ")
+        # Lógica para encontrar la habitación y su tarifa
+        habitacion_seleccionada = next((h for h in self.gestor_habitaciones.habitaciones if h.numero == num_hab), None)
+        if not habitacion_seleccionada:
+            print("Número de habitación no válido.")
+            return
+
         fecha = input("Fecha (dd/mm/aaaa): ")
         hora = input("Hora: ")
         self.reservas.crear_reserva(cliente.nombre, num_hab, fecha, hora)
+
+        # Preguntar si desea pagar ahora
+        desea_pagar = input("¿Desea pagar la reserva ahora? (s/n): ").lower()
+        if desea_pagar == 's':
+            await self.realizar_pago(habitacion_seleccionada.tarifa)
+
 
     def ver_reservas_cliente(self, cliente):
         reservas_cliente = [r for r in self.reservas.lista_reservas if r['cliente'] == cliente.nombre]
@@ -256,7 +269,7 @@ class HotelApp:
         for i, reserva in enumerate(reservas_cliente):
             print(f"{i+1}. Habitación: {reserva['habitacion']}, Fecha: {reserva['fecha']}, Hora: {reserva['hora']}")
 
-    def pagar_reservacion_cliente(self, cliente):
+    async def pagar_reservacion_cliente(self, cliente):
         reservas_cliente = [r for r in self.reservas.lista_reservas if r['cliente'] == cliente.nombre]
         if not reservas_cliente:
             print("No tiene reservas para pagar.")
@@ -281,29 +294,32 @@ class HotelApp:
                 print("Error: La habitación de la reserva no fue encontrada.")
                 return
 
-            self.realizar_pago(habitacion_a_pagar.tarifa)
+            await self.realizar_pago(habitacion_a_pagar.tarifa)
 
         except (ValueError, IndexError):
             print("Entrada inválida.")
 
-    def realizar_pago(self, monto):
+    async def realizar_pago(self, monto):
         print(f"El monto a pagar es de: ${monto}")
         tipo_pago = input("Método de pago (efectivo/tarjeta): ").lower()
 
         if tipo_pago == "efectivo":
             pago = PagoEnEfectivo(monto=monto)
-            self.gestor_pagos.realizar_pago(pago)
+            await self.gestor_pagos.realizar_pago(pago)
         elif tipo_pago == "tarjeta":
             num_tarjeta = input("Número de tarjeta (16 dígitos): ")
             cvv = input("CVV (3 dígitos): ")
             try:
                 pago = PagoConTarjeta(monto=monto, numero_tarjeta=num_tarjeta, cvv=cvv)
-                self.gestor_pagos.realizar_pago(pago)
+                await self.gestor_pagos.realizar_pago(pago)
             except ValueError as e:
                 print(f"Error en los datos de la tarjeta: {e}")
         else:
             print("Método de pago no válido.")
 
-if __name__ == "__main__":
+async def main():
     app = HotelApp()
-    app.menu_principal()
+    await app.menu_principal()
+
+if __name__ == "__main__":
+    asyncio.run(main())
