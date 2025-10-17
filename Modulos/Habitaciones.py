@@ -102,7 +102,6 @@ if __name__ == "__main__":
         print("7. Salir")
         opcion = input("Seleccione una opción: ")
 
-<<<<<<< HEAD
     if opcion == "1":
         gestor.agregar_habitacion()
     elif opcion == "2":
@@ -119,21 +118,3 @@ if __name__ == "__main__":
         print("Saliendo...")
     else:
         print("Opción no válida. Intente nuevamente.\n")
-=======
-        if opcion == "1":
-            gestor.agregar_habitacion()
-        elif opcion == "2":
-            gestor.mostrar_todas()
-        elif opcion == "3":
-            gestor.cambiar_estado()
-        elif opcion == "4":
-            gestor.buscar_por_estado()
-        elif opcion == "5":
-            gestor.buscar_por_tipo()
-        elif opcion == "6":
-            gestor.ordenar_por_tarifa()
-        elif opcion == "7":
-            print("Saliendo...")
-        else:
-            print("Opción no válida. Intente nuevamente.\n")
->>>>>>> 25806a2 (feat: Implement main menu and refactor Pagos module)

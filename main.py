@@ -2,17 +2,12 @@ import asyncio
 from Modulos.Clientes import Cliente
 from Modulos.Habitaciones import GestorHabitaciones, Habitacion
 from Modulos.Reservas import Reservas, habitaciones_disponibles
->>>>>>> 25806a2 (feat: Implement main menu and refactor Pagos module)
 from Modulos.Pagos import GestorDePagos, PagoEnEfectivo, PagoConTarjeta
 
 class HotelApp:
     def __init__(self):
         self.gestor_habitaciones = GestorHabitaciones()
-<<<<<<< HEAD
         self.reservas = GestorReservas(self.gestor_habitaciones)
-=======
-        self.reservas = Reservas()
->>>>>>> 25806a2 (feat: Implement main menu and refactor Pagos module)
         self.gestor_pagos = GestorDePagos()
         self._pre_cargar_datos()
 
@@ -55,7 +50,6 @@ class HotelApp:
             print("1. Gestionar Clientes")
             print("2. Gestionar Habitaciones")
             print("3. Gestionar Reservas")
-<<<<<<< HEAD
             print("4. Gestionar Pagos")
             print("5. Volver al menú principal")
             opcion = input("Seleccione una opción: ")
@@ -152,7 +146,6 @@ class HotelApp:
                 except ValueError:
                     print("Monto inválido.")
             elif opcion == "2":
-=======
             print("4. Volver al menú principal")
             opcion = input("Seleccione una opción: ")
 
@@ -163,7 +156,6 @@ class HotelApp:
             elif opcion == "3":
                 self.admin_gestionar_reservas()
             elif opcion == "4":
->>>>>>> 25806a2 (feat: Implement main menu and refactor Pagos module)
                 break
             else:
                 print("Opción no válida.")
