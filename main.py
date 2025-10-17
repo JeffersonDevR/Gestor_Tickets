@@ -12,11 +12,10 @@ class HotelApp:
         self._pre_cargar_datos()
 
     def _pre_cargar_datos(self):
-<<<<<<< HEAD
         if not any(c.n_identificacion == 0 for c in Cliente.clientes_registrados):
              Cliente.registrar_cliente("Admin", 0, "admin@hotel.com", "0")
 
-=======
+
         if not self.gestor_habitaciones.habitaciones:
             self.gestor_habitaciones.habitaciones.append(Habitacion("101", "Sencilla", 150.0))
             self.gestor_habitaciones.habitaciones.append(Habitacion("102", "Doble", 250.0))
@@ -146,8 +145,8 @@ class HotelApp:
                 except ValueError:
                     print("Monto inválido.")
             elif opcion == "2":
-            print("4. Volver al menú principal")
-            opcion = input("Seleccione una opción: ")
+                print("4. Volver al menú principal")
+                opcion = input("Seleccione una opción: ")
 
             if opcion == "1":
                 self.admin_gestionar_clientes()
