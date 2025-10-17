@@ -1,13 +1,6 @@
 # Sistema de Gestión Hotelera
-
-## Hotel Management System (CLI)
-
-**Proyecto**: Sistema de Gestión Hotelera
-
-
 ---
-
-## 📋 VISIÓN GENERAL DEL PROYECTO
+## VISIÓN GENERAL DEL PROYECTO
 
 ### Descripción del Sistema
 Sistema integral de gestión hotelera desarrollado en Python que permite la administración completa de operaciones hoteleras a través de una interfaz de línea de comandos (CLI). El sistema está diseñado para manejar dos tipos de usuarios principales: **Administradores** y **Clientes**, con funcionalidades diferenciadas según el rol.
@@ -21,7 +14,7 @@ Sistema integral de gestión hotelera desarrollado en Python que permite la admi
 
 ---
 
-## 🏗️ ARQUITECTURA TÉCNICA
+## ARQUITECTURA TÉCNICA
 
 ### Tecnologías Utilizadas
 - **Lenguaje**: Python 3.8+
@@ -54,7 +47,7 @@ El sistema sigue un patrón de arquitectura modular donde cada módulo represent
 
 ## 📋 REQUISITOS FUNCIONALES Y HISTORIAS DE USUARIO
 
-### MÓDULO 1: GESTIÓN DE CLIENTES 👥
+### MÓDULO 1: GESTIÓN DE CLIENTES
 
 #### RF-001: Registro de nuevos clientes
 
@@ -156,7 +149,7 @@ El sistema sigue un patrón de arquitectura modular donde cada módulo represent
 - ✓ Se puede cambiar manualmente a "mantenimiento" cuando sea necesario
 
 
-### MÓDULO 3: GESTIÓN DE RESERVAS 📅
+### MÓDULO 3: GESTIÓN DE RESERVAS
 
 #### RF-005: Creación de reservas
 
@@ -224,7 +217,7 @@ El sistema sigue un patrón de arquitectura modular donde cada módulo represent
 - ✓ Se elimina el registro de reserva del sistema
 - ✓ Se muestra confirmación de cancelación
 
-### MÓDULO 4: GESTIÓN DE PAGOS 💰
+### MÓDULO 4: GESTIÓN DE PAGOS
 
 #### RF-008: Procesamiento de pagos
 
@@ -248,50 +241,6 @@ El sistema sigue un patrón de arquitectura modular donde cada módulo represent
 - ✓ Se registra fecha y hora del pago
 - ✓ Se muestra confirmación del pago exitoso
 - ✓ Se marca la reserva como pagada
-
----
-
-
-
-## 🚀 INSTALACIÓN Y CONFIGURACIÓN
-
-### Requisitos Previos
-- Python 3.8 o superior
-- pip (gestor de paquetes de Python)
-
-### Instalación
-
-1. **Clonar o descargar el proyecto**
-   ```bash
-   # Si tienes git instalado
-   git clone [url-del-repositorio]
-   cd Sistema_Gestion_Hotelera
-   ```
-
-2. **Crear entorno virtual (recomendado)**
-   ```bash
-   python -m venv venv
-   # En Windows
-   venv\Scripts\activate
-   # En Linux/Mac
-   source venv/bin/activate
-   ```
-
-3. **Instalar dependencias**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-### Ejecución del Sistema
-
-```bash
-python main.py
-```
-
-El sistema iniciará mostrando el menú principal con las siguientes opciones:
-1. Entrar como Administrador
-2. Entrar como Cliente
-3. Salir
 
 ---
 
