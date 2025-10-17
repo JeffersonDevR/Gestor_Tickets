@@ -119,11 +119,11 @@ class HotelApp:
                 print("Cliente no encontrado.")
                 return
             #apuntar a gestor de habitaciones
-            print("Habitaciones disponibles:", self.gestor_habitaciones)
+            print("Habitaciones disponibles:", habitaciones_disponibles)
             num_hab = input("Seleccione el número de la habitación: ")
             fecha = input("Fecha (dd/mm/aaaa): ")
             hora = input("Hora: ")
-            self.reservas.crear_reserva(cliente.nombre, num_hab, fecha, hora)
+            self.reservas.crear_reserva((f"Cliente:{cliente.n_identificacion}",f"Documento:{cliente.n_identificacion}"), num_hab, fecha, hora)
         except ValueError:
             print("El N° de identificación debe ser un número.")
 
@@ -194,7 +194,6 @@ class HotelApp:
         
         while True:
             correo = input("Correo electrónico: ")
-            # OJO: tu condición original no funcionaba correctamente
             if "@" in correo and (correo.endswith(".com") or correo.endswith(".co") or correo.endswith(".org")):
                 break
             else:
@@ -216,7 +215,7 @@ class HotelApp:
 
     async def menu_cliente_logueado(self, cliente):
         while True:
-            print(f"\n--- Bienvenido, {cliente.nombre} ---")
+            print(f"\n--- Bienvenido, {cliente.n_identificacion} ---")
             print("1. Ver mis datos")
             print("2. Actualizar datos")
             print("3. Crear una reserva")
@@ -228,7 +227,7 @@ class HotelApp:
             if opcion == "1":
                 print(cliente)
             elif opcion == "2":
-                Cliente.actualizar_info_clientes(cliente.nombre)
+                Cliente.actualizar_info_clientes(cliente.n_identificacion)
             elif opcion == "3":
                 await self.crear_reserva_cliente(cliente)
             elif opcion == "4":
@@ -252,7 +251,7 @@ class HotelApp:
 
         fecha = input("Fecha (dd/mm/aaaa): ")
         hora = input("Hora: ")
-        self.reservas.crear_reserva(cliente.nombre, num_hab, fecha, hora)
+        self.reservas.crear_reserva(cliente.n_identificacion, num_hab, fecha, hora)
 
         # Preguntar si desea pagar ahora
         desea_pagar = input("¿Desea pagar la reserva ahora? (s/n): ").lower()
@@ -261,7 +260,7 @@ class HotelApp:
 
 
     def ver_reservas_cliente(self, cliente):
-        reservas_cliente = [r for r in self.reservas.lista_reservas if r['cliente'] == cliente.nombre]
+        reservas_cliente = [r for r in self.reservas.lista_reservas if r['cliente'] == cliente.n_identificacion]
         if not reservas_cliente:
             print("No tiene reservas activas.")
             return
@@ -272,7 +271,7 @@ class HotelApp:
     async def pagar_reservacion_cliente(self, cliente):
         #Se tiene que agregar o implementar pago por el historial_de_reservas
         # self.historial_de_reservas = []
-        reservas_cliente = [r for r in cliente.historial_de_reservas if r['cliente'] == cliente.nombre]
+        reservas_cliente = [r for r in cliente.historial_de_reservas if r['cliente'] == cliente.n_identificacion]
         if not reservas_cliente:
             print("No tiene reservas para pagar.")
             return
