@@ -14,6 +14,7 @@ class HotelApp:
     def _pre_cargar_datos(self):
 
 
+
         if not any(c.n_identificacion == 0 for c in Cliente.clientes_registrados):
              Cliente.registrar_cliente("Admin", 0, "admin@hotel.com", "0")
 
@@ -276,7 +277,7 @@ class HotelApp:
 
     async def menu_cliente_logueado(self, cliente):
         while True:
-            print(f"\n--- Bienvenido, {cliente.n_identificacion} ---")
+            print(f"\n--- Bienvenido, {cliente.nombre} ---")
             print("1. Ver mis datos")
             print("2. Actualizar datos")
             print("3. Crear una reserva")
@@ -290,7 +291,7 @@ class HotelApp:
             if opcion == "1":
                 print(cliente)
             elif opcion == "2":
-                Cliente.actualizar_info_clientes(cliente.n_identificacion)
+                Cliente.actualizar_info_clientes(cliente.nombre)
             elif opcion == "3":
                 await self.crear_reserva_cliente(cliente)
             elif opcion == "4":
@@ -327,32 +328,35 @@ class HotelApp:
 
 
     def ver_reservas_cliente(self, cliente):
-        reservas_cliente = [r for r in self.reservas.lista_reservas if r.cliente.n_identificacion == cliente.n_identificacion]
-        if not reservas_cliente:
-            print("No tiene reservas activas.")
-            return
-        print("\n--- Sus Reservas ---")
-        for i, reserva in enumerate(reservas_cliente):
-            print(f"{i+1}. Habitación: {reserva.habitacion.numero}, Fecha: {reserva.fecha}, Hora: {reserva.hora}")
+        cliente.mostrar_reservas_de_un_cliente(self.reservas.lista_reservas,cliente)
 
     async def pagar_reservacion_cliente(self, cliente):
+        # Filtramos solo las reservas de ese cliente
         reservas_cliente = [r for r in self.reservas.lista_reservas if r.cliente.n_identificacion == cliente.n_identificacion]
+
         if not reservas_cliente:
             print("No tiene reservas para pagar.")
             return
 
-        print("\n--- Seleccione la Reservación a Pagar ---")
+        print("\n--- Reservas Pendientes ---")
         for i, reserva in enumerate(reservas_cliente):
-            print(f"{i+1}. Habitación: {reserva.habitacion.numero}, Tarifa: ${reserva.habitacion.tarifa}")
+            print(f"{i+1}. Habitación: {reserva.habitacion.numero} | Fecha: {reserva.fecha} | Tarifa: ${reserva.habitacion.tarifa}")
 
         try:
-            opcion = int(input("Seleccione una reservación: ")) - 1
+            opcion = int(input("Seleccione la reservación que desea pagar: ")) - 1
             if not 0 <= opcion < len(reservas_cliente):
                 print("Selección inválida.")
                 return
 
             reserva_a_pagar = reservas_cliente[opcion]
+            print(f"Procesando pago para habitación {reserva_a_pagar.habitacion.numero}, monto: ${reserva_a_pagar.habitacion.tarifa}")
+
+            
             await self.realizar_pago(reserva_a_pagar.habitacion.tarifa)
+
+            
+            reserva_a_pagar.pagada = True
+            print("Pago realizado con éxito.")
 
         except (ValueError, IndexError):
             print("Entrada inválida.")
@@ -393,7 +397,7 @@ class HotelApp:
             return
 
         print("\n--- Cancelar Reserva ---")
-        for i, reserva in enumerate(reservas_cliente):
+        for i, reserva in enumerate(self.cliente.c):
             print(f"{i+1}. Habitación: {reserva.habitacion.numero}, Fecha: {reserva.fecha}, Hora: {reserva.hora}")
 
         try:

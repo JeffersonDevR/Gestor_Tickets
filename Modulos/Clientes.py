@@ -103,12 +103,12 @@ class Cliente:
                 print( f"No hay ningún cliente en nuestros registros con el número de documento: {numero_de_documento}")
     def mostrar_reservas_de_un_cliente(self,historial_reservas_g, cliente):
         self.historial_de_reservas=[reserva for reserva in historial_reservas_g
-            if cliente.n_identificacion==reserva['cliente']['documento']]
+            if cliente.n_identificacion == reserva.cliente.n_identificacion]
         if self.historial_de_reservas:      
             for r in self.historial_de_reservas:
                 print(r)
         else:
-            print(f"El cliente {cliente.nombre}  no tiene reservas  en su historial")       
+            print(f"El cliente {cliente.nombre}  no tiene reservas  en su historial")  
               
             
 
