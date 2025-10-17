@@ -1,23 +1,16 @@
-# -*- coding: utf-8 -*-
 from Modulos.Clientes import Cliente
-from Modulos.Habitaciones import GestorHabitaciones, Habitacion
-from Modulos.Reservas import Reservas, habitaciones_disponibles
+from Modulos.Habitaciones import GestorHabitaciones
+from Modulos.Reservas import GestorReservas
 from Modulos.Pagos import GestorDePagos, PagoEnEfectivo, PagoConTarjeta
 
 class HotelApp:
     def __init__(self):
         self.gestor_habitaciones = GestorHabitaciones()
-        self.reservas = Reservas()
+        self.reservas = GestorReservas(self.gestor_habitaciones)
         self.gestor_pagos = GestorDePagos()
         self._pre_cargar_datos()
 
     def _pre_cargar_datos(self):
-        if not self.gestor_habitaciones.habitaciones:
-            self.gestor_habitaciones.habitaciones.append(Habitacion("101", "Sencilla", 150.0))
-            self.gestor_habitaciones.habitaciones.append(Habitacion("102", "Doble", 250.0))
-            self.gestor_habitaciones.habitaciones.append(Habitacion("201", "Suite", 500.0))
-            habitaciones_disponibles.extend(["101", "102", "201"])
-
         if not any(c.n_identificacion == 0 for c in Cliente.clientes_registrados):
              Cliente.registrar_cliente("Admin", 0, "admin@hotel.com", "0")
 
@@ -86,7 +79,7 @@ class HotelApp:
             if opcion == "1":
                 self.gestor_habitaciones.mostrar_todas()
             elif opcion == "2":
-                self.gestor_habitaciones.agregar_habitacion()
+                self.gestor_habitaciones.agregar_habitacion() # type: ignore
             elif opcion == "3":
                 self.gestor_habitaciones.cambiar_estado()
             elif opcion == "4":
@@ -119,7 +112,7 @@ class HotelApp:
                 print("Cliente no encontrado.")
                 return
 
-            print("Habitaciones disponibles:", habitaciones_disponibles)
+            print("Habitaciones disponibles:", )
             num_hab = input("Seleccione el número de la habitación: ")
             fecha = input("Fecha (dd/mm/aaaa): ")
             hora = input("Hora: ")
@@ -207,7 +200,7 @@ class HotelApp:
 
     def crear_reserva_cliente(self, cliente):
         print("\n--- Crear Nueva Reserva ---")
-        print("Habitaciones disponibles:", habitaciones_disponibles)
+        print("Habitaciones disponibles:", )
         num_hab = input("Seleccione el número de la habitación: ")
         fecha = input("Fecha (dd/mm/aaaa): ")
         hora = input("Hora: ")

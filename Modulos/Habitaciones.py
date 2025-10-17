@@ -105,7 +105,7 @@ def menu_habitaciones():
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            gestor.agregar_habitacion()
+            gestor.agregar_habitacion("101",'Sencilla',150000)
         elif opcion == "2":
             gestor.mostrar_todas()
         elif opcion == "3":
@@ -120,4 +120,6 @@ def menu_habitaciones():
             print("Saliendo del sistema de habitaciones...")
         else:
             print("Opción no válida. Intente nuevamente.\n")
-menu_habitaciones()
+
+if __name__ == "__main__":
+    menu_habitaciones()

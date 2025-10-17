@@ -30,6 +30,7 @@ class PagoEnEfectivo(Pago):
         return True
 
 
+# Definimos una clase para pagos con tarjeta que también hereda de Pago.
 class PagoConTarjeta(Pago):
    
     numero_tarjeta: str

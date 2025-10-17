@@ -1,7 +1,17 @@
 class Cliente:
 
     clientes_registrados = []
-    def __init__(self,nombre,n_identificacion,correo,n_telefono):
+
+    def __init__(self, nombre, n_identificacion, correo, n_telefono):
+        """
+        Inicializa un nuevo objeto Cliente.
+
+        Args:
+            nombre (str): El nombre completo del cliente.
+            n_identificacion (int): El número de identificación del cliente.
+            correo (str): El correo electrónico del cliente.
+            n_telefono (int): El número de teléfono del cliente.
+        """
         self.nombre = nombre
         self.n_identificacion = n_identificacion
         self.correo = correo
