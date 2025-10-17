@@ -1,3 +1,5 @@
+# Importamos Pydantic para la validación de datos y otros módulos necesarios.
+import asyncio
 from pydantic import BaseModel, validator, Field
 from typing import ClassVar
 from abc import ABC, abstractmethod
@@ -18,12 +20,14 @@ class Pago(BaseModel, ABC):
 
     
     @abstractmethod
-    def procesar(self) -> bool:
+    async def procesar(self) -> bool:
         pass
 
 
 class PagoEnEfectivo(Pago):
-    def procesar(self) -> bool:
+    async def procesar(self) -> bool:
+        print("Procesando pago en efectivo...")
+        await asyncio.sleep(1)  # Simula un pequeño retraso
         self.estado = "completado"
         print(f"Pago en efectivo de ${self.monto:,.2f} procesado exitosamente.")
         return True
@@ -48,20 +52,37 @@ class PagoConTarjeta(Pago):
             raise ValueError('El CVV debe tener 3 dígitos numéricos.')
         return v
 
-    def procesar(self) -> bool:
+    async def procesar(self) -> bool:
+        """
+        Procesa un pago con tarjeta de forma asíncrona.
+        Simula una validación con una pasarela de pagos.
+        """
         print(f"Procesando pago de ${self.monto:,.2f} con tarjeta {self.numero_tarjeta[-4:]}...")
+        await asyncio.sleep(2)  # Simula la latencia de una pasarela de pago
         self.estado = "completado"
         print("Pago con tarjeta procesado exitosamente.")
         return True
 
 
 class GestorDePagos:
+    """
+    Gestiona y procesa los diferentes tipos de pagos de forma asíncrona.
+    """
     def __init__(self):
         self.pagos_procesados: ClassVar[list] = [] # type: ignore
 
-    def realizar_pago(self, pago: Pago) -> bool:
+    async def realizar_pago(self, pago: Pago) -> bool:
+        """
+        Realiza un pago utilizando el método de pago proporcionado de forma asíncrona.
+
+        Args:
+            pago (Pago): Una instancia de una subclase de Pago.
+
+        Returns:
+            bool: True si el pago fue exitoso, False en caso contrario.
+        """
         try:
-            if pago.procesar():
+            if await pago.procesar():
                 self.pagos_procesados.append(pago)
                 return True
             else:

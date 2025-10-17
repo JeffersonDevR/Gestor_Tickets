@@ -80,9 +80,9 @@ class Cliente:
                         return f"Okey, no quieres cambios, saliendo de la opción actualizar...."
                     else:
                         print("Ingrese si o no,animal.")
-            else:#colocar este else, con el for o un return al if y luego un print al terminar el bucle, sino encuentra.(el print sin el else
+        else:#colocar este else, con el for o un return al if y luego un print al terminar el bucle, sino encuentra.(el print sin el else
                 #solo si el if tiene un return para terminar cuando se cumpla, sino asi se cumpla va seguir y me va imprimir el print, cosa que no seria)
-                print( f"No hay ningún cliente en nuestros registros con el número de documento: {numero_de_documento}")
+            print( f"No hay ningún cliente en nuestros registros con el número de documento: {numero_de_documento}")
     def mostrar_reservas_de_un_cliente(self):
         nombre_cliente_busq=input("Ingrese el nombre del cliente que desea consultar: ")
         documento_cliente_busq=int(input("Ingrese  su número de identificación: "))
