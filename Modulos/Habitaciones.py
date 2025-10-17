@@ -6,7 +6,8 @@ class Habitacion:
         self.estado = "disponible"
 
     def mostrar_info(self):
-        print(f"Habitación {self.numero} | Tipo: {self.tipo} | Tarifa: ${self.tarifa:.2f} | Estado: {self.estado}")
+        print(f"Habitación {self.numero} | Tipo: {self.tipo} | "
+              f"Tarifa: ${self.tarifa:.2f} | Estado: {self.estado}")
 
     def cambiar_estado(self, nuevo_estado):
         if nuevo_estado in ["disponible", "ocupada", "mantenimiento"]:
@@ -20,7 +21,7 @@ class GestorHabitaciones:
     def __init__(self):
         self.habitaciones = []
 
-    def agregar_habitacion(self):
+    def agregar_habitacion(self,numero,tipo,tarifa):
         print("\n--- Registrar nueva habitación ---")
         numero = input("Ingrese el número de habitación: ")
         tipo = input("Ingrese el tipo (Sencilla, Doble, Suite, etc.): ")
@@ -86,12 +87,14 @@ class GestorHabitaciones:
                 h.mostrar_info()
         print()
 
-if __name__ == "__main__":
+
+# ====== MENÚ DE PRUEBA ======
+def menu_habitaciones():
     gestor = GestorHabitaciones()
     opcion = ""
 
     while opcion != "7":
-        print("====== SISTEMA DE GESTIÓN DE HABITACIONES ======")
+        print("\n====== SISTEMA DE GESTIÓN DE HABITACIONES ======")
         print("1. Registrar habitación")
         print("2. Mostrar todas las habitaciones")
         print("3. Cambiar estado de habitación (disponibilidad en tiempo real)")
@@ -114,6 +117,7 @@ if __name__ == "__main__":
         elif opcion == "6":
             gestor.ordenar_por_tarifa()
         elif opcion == "7":
-            print("Saliendo...")
+            print("Saliendo del sistema de habitaciones...")
         else:
             print("Opción no válida. Intente nuevamente.\n")
+menu_habitaciones()
