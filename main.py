@@ -9,20 +9,14 @@ class HotelApp:
         self.gestor_habitaciones = GestorHabitaciones()
         self.reservas = GestorReservas(self.gestor_habitaciones)
         self.gestor_pagos = GestorDePagos()
-        self._pre_cargar_datos()
+        # self._pre_cargar_datos()
+        self.admin_email = "admin@hotel.com"
+        self.admin_password = "1234"
 
-    def _pre_cargar_datos(self):
-
-
-
-        if not any(c.n_identificacion == 0 for c in Cliente.clientes_registrados):
-             Cliente.registrar_cliente("Admin", 0, "admin@hotel.com", "0")
-
-        # if not self.gestor_habitaciones.habitaciones:
-        #     self.gestor_habitaciones.habitaciones.append(Habitacion("101", "Sencilla", 150.0))
-
-        if not any(c.n_identificacion == 0 for c in Cliente.clientes_registrados):
-             Cliente.registrar_cliente("Admin", 0, "admin@hotel.com", "0")
+    # def _pre_cargar_datos(self):
+    #     if not any(c.n_identificacion == 0 for c in Cliente.clientes_registrados):
+    #          Cliente.registrar_cliente("Admin", 0, "admin@hotel.com", "0")
+    
 
     async def menu_principal(self):
         while True:
@@ -33,7 +27,7 @@ class HotelApp:
             opcion = input("Seleccione una opción: ")
 
             if opcion == "1":
-                await self.menu_admin()
+                await self.login_admin()
             elif opcion == "2":
                 await self.menu_cliente_inicial()
             elif opcion == "3":
@@ -41,6 +35,17 @@ class HotelApp:
                 break
             else:
                 print("Opción no válida.")
+
+    async def login_admin(self):
+        print("\n--- Inicio de Sesión (Administrador) ---")
+        email = input("Correo: ")
+        password = input("Contraseña: ")
+        if email == self.admin_email and password == self.admin_password:
+            print("Inicio de sesión exitoso")
+            await self.menu_admin()
+        else:
+            print("Credenciales incorrectas. Acceso denegado.")
+
 
     async def menu_admin(self):
         while True:
@@ -66,16 +71,69 @@ class HotelApp:
                 print("Opción no válida.")
 
     def admin_gestionar_clientes(self):
-        print("\n--- Gestión de Clientes (Admin) ---")
-        print("1. Ver todos los clientes")
-        print("2. Actualizar cliente")
-        opcion = input("Seleccione una opción: ")
-        if opcion == '1':
-            for cliente in Cliente.clientes_registrados:
-                print(cliente)
-        elif opcion == '2':
-            nombre_cliente = input("Ingrese el nombre del cliente que desea buscar para actualizar: ")
-            Cliente.actualizar_info_clientes(nombre_cliente)
+        while True:
+            print("\n--- Gestión de Clientes (Admin) ---")
+            print("1. Ver todos los clientes")
+            print("2. Actualizar cliente")
+            print("3. Agregar nuevo cliente")
+            print("4. Volver al panel de administración")
+            opcion = input("Seleccione una opción: ")
+
+            if opcion == "1":
+                if not Cliente.clientes_registrados:
+                    print("No hay clientes registrados aún.")
+                else:
+                    for cliente in Cliente.clientes_registrados:
+                        print(cliente)
+
+            elif opcion == "2":
+                nombre_cliente = input("Ingrese el nombre del cliente que desea buscar para actualizar: ")
+                Cliente.actualizar_info_clientes(nombre_cliente)
+
+            elif opcion == "3":
+                self.admin_agregar_cliente()
+
+            elif opcion == "4":
+                break
+            else:
+                print("Opción no válida.")
+
+    def admin_agregar_cliente(self):
+        print("\n--- Registro de Nuevo Cliente (por Admin) ---")
+
+        while True:
+            nombre = input("Nombre completo: ")
+            if all(ch.isalpha() or ch.isspace() for ch in nombre) and nombre.strip():
+                break
+            else:
+                print("El nombre solo debe contener letras y espacios.")
+
+        while True:
+            doc = input("Número de identificación: ")
+            if doc.isdigit():
+                doc = int(doc)
+                break
+            else:
+                print("El número de identificación debe ser numérico.")
+
+        while True:
+            correo = input("Correo electrónico: ")
+            if "@" in correo and (correo.endswith(".com") or correo.endswith(".co") or correo.endswith(".org")):
+                break
+            else:
+                print("El correo debe contener '@' y terminar en '.com', '.co' o '.org'.")
+
+        while True:
+            tel = input("Teléfono: ")
+            if tel.isdigit():
+                tel = int(tel)
+                break
+            else:
+                print("El teléfono debe contener solo números.")
+
+        nuevo_cliente = Cliente.registrar_cliente(nombre, doc, correo, tel)
+        if nuevo_cliente:
+            print("Cliente registrado exitosamente por el administrador.")
 
     def admin_gestionar_habitaciones(self):
         while True:
@@ -238,7 +296,6 @@ class HotelApp:
 
         while True:
             nombre = input("Nombre completo: ")
-            # Usamos all() para permitir espacios entre nombres
             if all(ch.isalpha() or ch.isspace() for ch in nombre) and nombre.strip():
                 break
             else:
@@ -321,7 +378,6 @@ class HotelApp:
         hora = input("Hora: ")
         self.reservas.crear_reserva(cliente, num_hab, fecha, hora)
 
-        # Preguntar si desea pagar ahora
         desea_pagar = input("¿Desea pagar la reserva ahora? (s/n): ").lower()
         if desea_pagar == 's':
             await self.realizar_pago(habitacion_seleccionada.tarifa)
@@ -331,7 +387,6 @@ class HotelApp:
         cliente.mostrar_reservas_de_un_cliente(self.reservas.lista_reservas,cliente)
 
     async def pagar_reservacion_cliente(self, cliente):
-        # Filtramos solo las reservas de ese cliente
         reservas_cliente = [r for r in self.reservas.lista_reservas if r.cliente.n_identificacion == cliente.n_identificacion]
 
         if not reservas_cliente:
