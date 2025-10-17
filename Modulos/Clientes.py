@@ -1,5 +1,5 @@
 class Cliente:
-
+    
     clientes_registrados = []
     def __init__(self,nombre,n_identificacion,correo,n_telefono):
         self.nombre = nombre
@@ -7,13 +7,13 @@ class Cliente:
         self.correo = correo
         self.n_telefono = n_telefono
         self.historial_de_reservas = []
-
+        
     @classmethod
     def registrar_cliente(cls,nombre,numero_documento,correo_electr,telefono):
         for cliente_existente in cls.clientes_registrados:
             if cliente_existente.n_identificacion == numero_documento:
                 print("Este cliente ya se encuentra registrado en el sistema")
-                return
+                return 
         else:#este else va con el for, no con el if. Para evitar duplicados(osea que si no es if,vaya al else
             #y me cree un usuario con el el mismo documento, ya que el else, no tiene ninguna validacion)
             cliente_nuevo=Cliente(nombre,numero_documento,correo_electr,telefono)
@@ -26,12 +26,12 @@ class Cliente:
         for  cliente_existente in cls.clientes_registrados:
             if buscar_cliente.lower() in cliente_existente.nombre.lower().split():
                 if not encontrado:
-                   print(f"Los usuarios que tenemos registrados con el nombre : {buscar_cliente} son: ")
+                   print(f"Los usuarios que tenemos registrados con el nombre : {buscar_cliente} son: ") 
                    encontrado=True#para que se muestre una sola vez el mensaje
                 print(cliente_existente.nombre)
         if not encontrado:
               print(f"No hay un usuario que coincida con el nombre {buscar_cliente} en nuestros registros")
-              return
+              return  
         numero_de_documento = int(input("Ingrese su número de identificacion, para poder continuar con la actualizacion" \
                 "de algunos de sus datos; "))
         for cliente_coincididos in cls.clientes_registrados:
@@ -39,108 +39,126 @@ class Cliente:
                     print(f"Estos son sus datos actuales: {cliente_coincididos}")
 
                     validar_desicion=input("Desea actualizar algunos de estos datos: si/no ")
-                    if validar_desicion.lower() == "si":
-
+                    if validar_desicion.lower() == "si":   
+                        
                         while True:
                              print("Eliga alguna de estas opciones: " \
                                    "\n1. Actualizar nombre\n2. Actualizar correo\n3. Actualizar télefono")
-
+                             
                              opcion=input("Ingrese una opción: ")
                              if opcion=="1":
                                 nombre_nuevo=input("Ingrese el nuevo nombre: ")
-                                if "1234567890¿@+*" in nombre_nuevo:
-                                    print("Socio solo se aceptan letras,no es un gamername")
-                                else:
-                                    cliente_existente.nombre=nombre_nuevo
-                                    print("El nombre ha sido actualizado con éxito")
+            
+                                if nombre_nuevo.replace(" ", "").isalpha():#replace ayuda a que alpha no me termine por tener espacios, los quita temporal, para validar solo letras.
+                                    cliente_coincididos.nombre=nombre_nuevo
+                                    print("Nombre actualizado con éxito")
                                     break
+                                    
+                                else:
+                                    print("Solo se aceptan letras")
+                                    
 
                              elif opcion=="2":
                                   correo_nuevo=input("Ingrese el nuevo correo: ")
-                                  if "@" and ".com" in correo_nuevo:
-                                    cliente_existente.correo=correo_nuevo
-                                    print("El correo ha sido actualizado con éxito")
-                                    break
+                                  if "@"  in correo_nuevo and ".com"  in correo_nuevo:
+                                    for cliente in cls.clientes_registrados:
+                                       if cliente.correo==correo_nuevo:
+                                           print("¡Error!, este correo ya esta asociado a un cliente.")
+                                           break
+
+                                    else:
+                                        cliente_coincididos.correo=correo_nuevo
+                                        print("El correo ha sido actualizado con éxito")
+                                        break
+                                    
                                   else:
-                                    print("¡Paila menor!.Ingrese un formato de correo electrónico válido")
+                                      print("¡Error!.Ingrese un formato de correo electrónico válido")
+                                     
 
                              elif opcion=="3":
-                                  try:
-                                      telefono_nuevo=int(input("Ingrese el nuevo telefono: "))
-
-                                      cliente_existente.n_telefono=telefono_nuevo
-                                      print("El télefono ha sido actualizado con éxito")
-                                      break
-                                  except ValueError:
-                                      print("¡No sea bruto!,solo se puede ingresar valores numericos para teléfonos")
+                                  
+                                      telefono_nuevo_str=input("Ingrese el nuevo telefono: ")
+                                      if len(telefono_nuevo_str)==10:
+                                         try:
+                                             telefono_nuevo=int(telefono_nuevo_str)
+                                             cliente_coincididos.n_telefono=telefono_nuevo
+                                             print("El télefono ha sido actualizado con éxito")
+                                             break
+                                         except ValueError:
+                                            print("¡Solo se puede ingresar valores numericos para teléfonos")
+                                      else: 
+                                          print("El telefono debe contener 10 digitos exactos.")                             
+                                    
                              else:
-
-                                 print("Papito no sea bruto,ingrese una opción de las que se muestran")
+                
+                                 print("Ingrese una opción de las que se muestran")#Se refiere al mini menu de mi while
                     elif validar_desicion.lower()== "no":
-                        return f"Okey, no quieres cambios, saliendo de la opción actualizar...."
+                        print(f"Okey, no quieres cambios, saliendo de la opción actualizar....")
+                        return      
                     else:
-                        print("Ingrese si o no,animal.")
+                        print("Ingrese si o no")#es para si la opcion e diferente a no o si
+                    break
         else:#colocar este else, con el for o un return al if y luego un print al terminar el bucle, sino encuentra.(el print sin el else
                 #solo si el if tiene un return para terminar cuando se cumpla, sino asi se cumpla va seguir y me va imprimir el print, cosa que no seria)
-            print( f"No hay ningún cliente en nuestros registros con el número de documento: {numero_de_documento}")
-    def mostrar_reservas_de_un_cliente(self):
-        nombre_cliente_busq=input("Ingrese el nombre del cliente que desea consultar: ")
-        documento_cliente_busq=int(input("Ingrese  su número de identificación: "))
-        correo_cliente_busq=input("Ingrese su correo electronico: ")
-        for cliente in Cliente.clientes_registrados:
-           if nombre_cliente_busq.lower()==cliente.nombre.lower() and documento_cliente_busq==cliente.n_identificacion and correo_cliente_busq.lower()== cliente.correo.lower() :
-               if cliente.historial_de_reservas:
-                   print(f"Este es el historial de reservas del cliente: {cliente.historial_de_reservas}")
-               else:
-                   print(f"El cliente {cliente.nombre} no tiene reservas asignadas")
-               break
-        else:#Para cuando el if no funciona con ningún cliente, y no me cierre el bucle con el primer usuario, en el caso de que el if sea incorrecto.Porque si coloco el else
-             #con el primer if, me va mostrar el mensaje para cada cliente que encuentre que sea diferente, y si coloco un break a ese else, si el primer usuario los datos no son iguales
-             #porque pertenecen a otro cliente, entonces me va mostrar el mensaje del else, y me termina el bucle y  no compara el resto, por eso va con el for, para evitar esos 2 errores.
-             print("¡Error!. Alguno de los datos ingresados no coinciden con un cliente o son incorrectos")
-
+                print( f"No hay ningún cliente en nuestros registros con el número de documento: {numero_de_documento}")
+    def mostrar_reservas_de_un_cliente(self,historial_reservas_g, cliente):
+        self.historial_de_reservas=[reserva for reserva in historial_reservas_g
+            if cliente.n_identificacion==reserva['cliente']['documento']]
+        if self.historial_de_reservas:      
+            for r in self.historial_de_reservas:
+                print(r)
+        else:
+            print(f"El cliente {cliente.nombre}  no tiene reservas  en su historial")       
+              
+            
 
 
     def __str__(self):
-        return f"Cliente: {self.nombre}||\nIdentificación: {self.n_identificacion}|| Correo electrónico: {self.correo}|| Número de contacto: {self.n_telefono}"
+        return (
+        f"\n=== Datos del Cliente ===\n"
+        f"Nombre: {self.nombre}\n"
+        f"Identificación: {self.n_identificacion}\n"
+        f"Correo: {self.correo}\n"
+        f"Teléfono: {self.n_telefono}\n"
+        f"========================="
+    )
 
-
-if __name__ == "__main__":
-    while True:
-        option=input("Ingrese una opción: ")
-        if option=="1":
-            print("Ingrese sus datos, para hacer el registro: ")
-            name= input("Ingrese su nombre completo(con apellidos): ")
-            number_docu=int(input("Ingrese su número de identificación: "))
-            email_electro=input("Ingrese su correo electrónico: ")
-            iphone=int(input("Ingrese su número de teléfono: "))
-            Cliente.registrar_cliente(name,number_docu,email_electro,iphone)
-            for clientes in Cliente.clientes_registrados:
-                print(clientes)
-
-        elif option=="2":
-
-            if not Cliente.clientes_registrados:
-                print("No hay clientes registrados hasta el momento en el sistema")
-            else:
-                print("Ingrese el nombre del cliente que desea buscar: ")
-                nombre_cliente=input("")
-                Cliente.actualizar_info_clientes(nombre_cliente)
-
-
-        elif option=="3":
-            cliente_instancia=None
-            for client in Cliente.clientes_registrados:
-                 cliente_instancia=client
-            if cliente_instancia is not None:
-                cliente_instancia.mostrar_reservas_de_un_cliente()
-            else:
-                print("No hay clientes registrados en el sistema para ver sus reservas.")
-
-        elif option=="4":
-            print("Adios bby")
-            break
+while True:
+    option=input("Ingrese una opción: ")
+    if option=="1":
+        print("Ingrese sus datos, para hacer el registro: ")
+        name= input("Ingrese su nombre completo(con apellidos): ")
+        number_docu=int(input("Ingrese su número de identificación: "))
+        email_electro=input("Ingrese su correo electrónico: ")
+        iphone=int(input("Ingrese su número de teléfono: "))
+        Cliente.registrar_cliente(name,number_docu,email_electro,iphone)
+        for clientes in Cliente.clientes_registrados:
+            print(clientes)
+       
+    elif option=="2":
+        
+        if not Cliente.clientes_registrados:
+            print("No hay clientes registrados hasta el momento en el sistema")
         else:
-            print("Escoja del 1 al 3 bobo")
+            print("Ingrese el nombre del cliente que desea buscar: ")
+            nombre_cliente=input("")
+            Cliente.actualizar_info_clientes(nombre_cliente)
+        
+            
+    elif option=="3":
+        cliente_instancia=None
+        for client in Cliente.clientes_registrados:
+             cliente_instancia=client
+        if cliente_instancia is not None:   
+            cliente_instancia.mostrar_reservas_de_un_cliente()
+        else:
+            print("No hay clientes registrados en el sistema para ver sus reservas.")
+                
+    elif option=="4":
+        print("Saliendo...")
+        break       
+    else:
+        print("Escoja del 1 al 3 ")
 
 
+        

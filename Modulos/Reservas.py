@@ -1,5 +1,4 @@
 from Habitaciones import GestorHabitaciones, Habitacion
-from Clientes import Cliente 
 class Reserva:
     def __init__(self, cliente, habitacion, fecha, hora):
         self.cliente = cliente
@@ -31,7 +30,6 @@ class GestorReservas:
 
         nueva_reserva = Reserva(cliente, habitacion, fecha, hora)
         self.lista_reservas.append(nueva_reserva)
-        cliente.historial_de_reservas.append(nueva_reserva)
         habitacion.cambiar_estado("ocupada")
         print(f"Reserva creada correctamente para {cliente} en la habitación {numero_habitacion}.")
 
