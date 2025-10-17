@@ -7,7 +7,7 @@ class Reserva:
         self.hora = hora
 
     def __str__(self):
-        return (f"Cliente: {self.cliente} | "
+        return (f"Cliente: {self.cliente.nombre} | Identificación: {self.cliente.n_identificacion}  "
                 f"Habitación: {self.habitacion.numero} | "
                 f"Fecha: {self.fecha} | Hora: {self.hora}")
 
