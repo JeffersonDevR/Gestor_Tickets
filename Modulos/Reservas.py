@@ -7,7 +7,7 @@ class Reserva:
         self.hora = hora
 
     def __str__(self):
-        return (f"Cliente: {self.cliente} | "
+        return (f"Cliente: {self.cliente.nombre} (ID: {self.cliente.n_identificacion}) | "
                 f"Habitación: {self.habitacion.numero} | "
                 f"Fecha: {self.fecha} | Hora: {self.hora}")
 
@@ -46,34 +46,37 @@ class GestorReservas:
         print("No se encontró una reserva con ese número de habitación.")
 
     def modificar_reserva(self, numero_habitacion, nuevo_cliente=None, nueva_fecha=None, nueva_hora=None, nueva_habitacion_numero=None):
-        for reserva in self.lista_reservas:
-            if reserva.habitacion.numero == numero_habitacion:
-                print(f"Reserva encontrada: {reserva}")
+        reserva_encontrada = None
+        for r in self.lista_reservas:
+            if r.habitacion.numero == numero_habitacion:
+                reserva_encontrada = r
+                break
 
-                if nuevo_cliente:
-                    reserva.cliente = nuevo_cliente
-                if nueva_fecha:
-                    reserva.fecha = nueva_fecha
-                if nueva_hora:
-                    reserva.hora = nueva_hora
+        if not reserva_encontrada:
+            print("No se encontró una reserva con ese número de habitación.")
+            return
 
-                if nueva_habitacion_numero:
-                    habitacion_nueva = self.gestor_habitaciones.buscar_habitacion(nueva_habitacion_numero)
-                    if habitacion_nueva is None:
-                        print("No existe una habitación con ese número.")
-                        return
-                    if habitacion_nueva.estado != "disponible":
-                        print("La nueva habitación no está disponible.")
-                        return
+        if nuevo_cliente:
+            reserva_encontrada.cliente = nuevo_cliente
+        if nueva_fecha:
+            reserva_encontrada.fecha = nueva_fecha
+        if nueva_hora:
+            reserva_encontrada.hora = nueva_hora
 
-                    reserva.habitacion.cambiar_estado("disponible")
-                    reserva.habitacion = habitacion_nueva
-                    habitacion_nueva.cambiar_estado("ocupada")
-
-                print("Reserva modificada correctamente.")
+        if nueva_habitacion_numero and nueva_habitacion_numero != numero_habitacion:
+            nueva_habitacion = self.gestor_habitaciones.buscar_habitacion(nueva_habitacion_numero)
+            if not nueva_habitacion:
+                print("La nueva habitación no existe.")
+                return
+            if nueva_habitacion.estado != "disponible":
+                print("La nueva habitación no está disponible.")
                 return
 
-        print("No se encontró una reserva con ese número de habitación.")
+            reserva_encontrada.habitacion.cambiar_estado("disponible")
+            nueva_habitacion.cambiar_estado("ocupada")
+            reserva_encontrada.habitacion = nueva_habitacion
+
+        print("Reserva modificada con éxito.")
 
     def mostrar_reservas(self):
         if not self.lista_reservas:
@@ -81,7 +84,7 @@ class GestorReservas:
         else:
             print("\nLista de reservas:")
             for r in self.lista_reservas:
-                print(f"- Cliente: {r['cliente']}, Habitación: {r['habitacion']}, Fecha: {r['fecha']}, Hora: {r['hora']}")
+                print(f"- Cliente: {r.cliente.nombre}, Habitación: {r.habitacion.numero}, Fecha: {r.fecha}, Hora: {r.hora}")
 
 def menu():
     sistema = Reservas()  # Crear el objeto del sistema de reservas

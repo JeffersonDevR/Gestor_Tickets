@@ -101,13 +101,19 @@ class HotelApp:
             print("\n--- Gestión de Reservas (Admin) ---")
             print("1. Ver todas las reservas")
             print("2. Crear nueva reserva para un cliente")
-            print("3. Volver al panel de administración")
+            print("3. Modificar una reserva")
+            print("4. Cancelar una reserva")
+            print("5. Volver al panel de administración")
             opcion = input("Seleccione una opción: ")
             if opcion == "1":
                 self.reservas.mostrar_reservas()
             elif opcion == "2":
                 self.admin_crear_reserva()
             elif opcion == "3":
+                self.admin_modificar_reserva()
+            elif opcion == "4":
+                self.admin_cancelar_reserva()
+            elif opcion == "5":
                 break
             else:
                 print("Opción no válida.")
@@ -125,9 +131,52 @@ class HotelApp:
             num_hab = input("Seleccione el número de la habitación: ")
             fecha = input("Fecha (dd/mm/aaaa): ")
             hora = input("Hora: ")
-            self.reservas.crear_reserva((f"Cliente:{cliente.n_identificacion}",f"Documento:{cliente.n_identificacion}"), num_hab, fecha, hora)
+            self.reservas.crear_reserva(cliente, num_hab, fecha, hora)
         except ValueError:
             print("El N° de identificación debe ser un número.")
+
+    def admin_modificar_reserva(self):
+        print("\n--- Modificar Reserva (Admin) ---")
+        if not self.reservas.lista_reservas:
+            print("No hay reservas activas.")
+            return
+
+        self.reservas.mostrar_reservas()
+        try:
+            num_hab_actual = input("Ingrese el número de la habitación de la reserva a modificar: ")
+
+            reserva_a_modificar = next((r for r in self.reservas.lista_reservas if r.habitacion.numero == num_hab_actual), None)
+            if not reserva_a_modificar:
+                print("No se encontró una reserva para esa habitación.")
+                return
+
+            print(f"Cliente actual: {reserva_a_modificar.cliente.nombre} (ID: {reserva_a_modificar.cliente.n_identificacion})")
+
+            nueva_fecha = input(f"Nueva fecha (actual: {reserva_a_modificar.fecha}): ") or reserva_a_modificar.fecha
+            nueva_hora = input(f"Nueva hora (actual: {reserva_a_modificar.hora}): ") or reserva_a_modificar.hora
+
+            print("Habitaciones disponibles:", [h.numero for h in self.gestor_habitaciones.habitaciones if h.estado == 'disponible' or h.numero == num_hab_actual])
+            nuevo_num_hab = input(f"Nuevo número de habitación (actual: {num_hab_actual}): ") or num_hab_actual
+
+            self.reservas.modificar_reserva(num_hab_actual, nueva_fecha=nueva_fecha, nueva_hora=nueva_hora, nueva_habitacion_numero=nuevo_num_hab)
+
+        except ValueError:
+            print("El N° de identificación debe ser un número.")
+        except Exception as e:
+            print(f"Error al modificar la reserva: {e}")
+
+    def admin_cancelar_reserva(self):
+        print("\n--- Cancelar Reserva (Admin) ---")
+        if not self.reservas.lista_reservas:
+            print("No hay reservas activas.")
+            return
+
+        self.reservas.mostrar_reservas()
+        try:
+            num_hab = input("Ingrese el número de la habitación de la reserva a cancelar: ")
+            self.reservas.cancelar_reserva(num_hab)
+        except Exception as e:
+            print(f"Error al cancelar la reserva: {e}")
 
     async def admin_gestionar_pagos(self):
         while True:
@@ -232,8 +281,10 @@ class HotelApp:
             print("2. Actualizar datos")
             print("3. Crear una reserva")
             print("4. Ver mis reservas")
-            print("5. Pagar reservación")
-            print("6. Cerrar sesión")
+            print("5. Modificar una reserva")
+            print("6. Cancelar una reserva")
+            print("7. Pagar reservación")
+            print("8. Cerrar sesión")
             opcion = input("Seleccione una opción: ")
 
             if opcion == "1":
@@ -245,8 +296,12 @@ class HotelApp:
             elif opcion == "4":
                 self.ver_reservas_cliente(cliente)
             elif opcion == "5":
-                await self.pagar_reservacion_cliente(cliente)
+                self.modificar_reserva_cliente(cliente)
             elif opcion == "6":
+                self.cancelar_reserva_cliente(cliente)
+            elif opcion == "7":
+                await self.pagar_reservacion_cliente(cliente)
+            elif opcion == "8":
                 break
             else:
                 print("Opción no válida.")
@@ -263,7 +318,7 @@ class HotelApp:
 
         fecha = input("Fecha (dd/mm/aaaa): ")
         hora = input("Hora: ")
-        self.reservas.crear_reserva(cliente.n_identificacion, num_hab, fecha, hora)
+        self.reservas.crear_reserva(cliente, num_hab, fecha, hora)
 
         # Preguntar si desea pagar ahora
         desea_pagar = input("¿Desea pagar la reserva ahora? (s/n): ").lower()
@@ -272,27 +327,23 @@ class HotelApp:
 
 
     def ver_reservas_cliente(self, cliente):
-        reservas_cliente = [r for r in self.reservas.lista_reservas if r['cliente'] == cliente.n_identificacion]
+        reservas_cliente = [r for r in self.reservas.lista_reservas if r.cliente.n_identificacion == cliente.n_identificacion]
         if not reservas_cliente:
             print("No tiene reservas activas.")
             return
         print("\n--- Sus Reservas ---")
         for i, reserva in enumerate(reservas_cliente):
-            print(f"{i+1}. Habitación: {reserva['habitacion']}, Fecha: {reserva['fecha']}, Hora: {reserva['hora']}")
+            print(f"{i+1}. Habitación: {reserva.habitacion.numero}, Fecha: {reserva.fecha}, Hora: {reserva.hora}")
 
     async def pagar_reservacion_cliente(self, cliente):
-        #Se tiene que agregar o implementar pago por el historial_de_reservas
-        # self.historial_de_reservas = []
-        reservas_cliente = [r for r in cliente.historial_de_reservas if r['cliente'] == cliente.n_identificacion]
+        reservas_cliente = [r for r in self.reservas.lista_reservas if r.cliente.n_identificacion == cliente.n_identificacion]
         if not reservas_cliente:
             print("No tiene reservas para pagar.")
             return
 
         print("\n--- Seleccione la Reservación a Pagar ---")
         for i, reserva in enumerate(reservas_cliente):
-            hab = next((h for h in self.gestor_habitaciones.habitaciones if h.numero == reserva['habitacion']), None)
-            tarifa = hab.tarifa if hab else "N/A"
-            print(f"{i+1}. Habitación: {reserva['habitacion']}, Tarifa: ${tarifa}")
+            print(f"{i+1}. Habitación: {reserva.habitacion.numero}, Tarifa: ${reserva.habitacion.tarifa}")
 
         try:
             opcion = int(input("Seleccione una reservación: ")) - 1
@@ -301,13 +352,58 @@ class HotelApp:
                 return
 
             reserva_a_pagar = reservas_cliente[opcion]
-            habitacion_a_pagar = next((h for h in self.gestor_habitaciones.habitaciones if h.numero == reserva_a_pagar['habitacion']), None)
+            await self.realizar_pago(reserva_a_pagar.habitacion.tarifa)
 
-            if not habitacion_a_pagar:
-                print("Error: La habitación de la reserva no fue encontrada.")
+        except (ValueError, IndexError):
+            print("Entrada inválida.")
+
+    def modificar_reserva_cliente(self, cliente):
+        reservas_cliente = [r for r in self.reservas.lista_reservas if r.cliente.n_identificacion == cliente.n_identificacion]
+        if not reservas_cliente:
+            print("No tiene reservas activas.")
+            return
+
+        print("\n--- Modificar Reserva ---")
+        for i, reserva in enumerate(reservas_cliente):
+            print(f"{i+1}. Habitación: {reserva.habitacion.numero}, Fecha: {reserva.fecha}, Hora: {reserva.hora}")
+
+        try:
+            opcion = int(input("Seleccione la reserva a modificar: ")) - 1
+            if not 0 <= opcion < len(reservas_cliente):
+                print("Selección inválida.")
                 return
 
-            await self.realizar_pago(habitacion_a_pagar.tarifa)
+            reserva_a_modificar = reservas_cliente[opcion]
+
+            nueva_fecha = input(f"Nueva fecha (actual: {reserva_a_modificar.fecha}): ") or reserva_a_modificar.fecha
+            nueva_hora = input(f"Nueva hora (actual: {reserva_a_modificar.hora}): ") or reserva_a_modificar.hora
+
+            print("Habitaciones disponibles:", [h.numero for h in self.gestor_habitaciones.habitaciones if h.estado == 'disponible'])
+            nuevo_num_hab = input(f"Nuevo número de habitación (actual: {reserva_a_modificar.habitacion.numero}): ") or reserva_a_modificar.habitacion.numero
+
+            self.reservas.modificar_reserva(reserva_a_modificar.habitacion.numero, nueva_fecha=nueva_fecha, nueva_hora=nueva_hora, nueva_habitacion_numero=nuevo_num_hab)
+
+        except (ValueError, IndexError):
+            print("Entrada inválida.")
+
+    def cancelar_reserva_cliente(self, cliente):
+        reservas_cliente = [r for r in self.reservas.lista_reservas if r.cliente.n_identificacion == cliente.n_identificacion]
+        if not reservas_cliente:
+            print("No tiene reservas activas.")
+            return
+
+        print("\n--- Cancelar Reserva ---")
+        for i, reserva in enumerate(reservas_cliente):
+            print(f"{i+1}. Habitación: {reserva.habitacion.numero}, Fecha: {reserva.fecha}, Hora: {reserva.hora}")
+
+        try:
+            opcion = int(input("Seleccione la reserva a cancelar: ")) - 1
+            if not 0 <= opcion < len(reservas_cliente):
+                print("Selección inválida.")
+                return
+
+            reserva_a_cancelar = reservas_cliente[opcion]
+            self.reservas.cancelar_reserva(reserva_a_cancelar.habitacion.numero)
 
         except (ValueError, IndexError):
             print("Entrada inválida.")
