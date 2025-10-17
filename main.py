@@ -1,7 +1,7 @@
 import asyncio
 from Modulos.Clientes import Cliente
 from Modulos.Habitaciones import GestorHabitaciones, Habitacion
-from Modulos.Reservas import Reservas, habitaciones_disponibles
+from Modulos.Reservas import GestorReservas
 from Modulos.Pagos import GestorDePagos, PagoEnEfectivo, PagoConTarjeta
 
 class HotelApp:
@@ -12,15 +12,13 @@ class HotelApp:
         self._pre_cargar_datos()
 
     def _pre_cargar_datos(self):
+
+
         if not any(c.n_identificacion == 0 for c in Cliente.clientes_registrados):
              Cliente.registrar_cliente("Admin", 0, "admin@hotel.com", "0")
 
-
-        if not self.gestor_habitaciones.habitaciones:
-            self.gestor_habitaciones.habitaciones.append(Habitacion("101", "Sencilla", 150.0))
-            self.gestor_habitaciones.habitaciones.append(Habitacion("102", "Doble", 250.0))
-            self.gestor_habitaciones.habitaciones.append(Habitacion("201", "Suite", 500.0))
-            habitaciones_disponibles.extend(["101", "102", "201"])
+        # if not self.gestor_habitaciones.habitaciones:
+        #     self.gestor_habitaciones.habitaciones.append(Habitacion("101", "Sencilla", 150.0))
 
         if not any(c.n_identificacion == 0 for c in Cliente.clientes_registrados):
              Cliente.registrar_cliente("Admin", 0, "admin@hotel.com", "0")
@@ -123,7 +121,7 @@ class HotelApp:
                 print("Cliente no encontrado.")
                 return
             #apuntar a gestor de habitaciones
-            print("Habitaciones disponibles:", habitaciones_disponibles)
+            print("Habitaciones disponibles:", [h.numero for h in self.gestor_habitaciones.habitaciones])
             num_hab = input("Seleccione el número de la habitación: ")
             fecha = input("Fecha (dd/mm/aaaa): ")
             hora = input("Hora: ")

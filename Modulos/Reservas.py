@@ -1,4 +1,4 @@
-from Habitaciones import GestorHabitaciones, Habitacion
+from Modulos.Habitaciones import GestorHabitaciones, Habitacion
 class Reserva:
     def __init__(self, cliente, habitacion, fecha, hora):
         self.cliente = cliente
@@ -15,10 +15,13 @@ class Reserva:
 class GestorReservas:
     def __init__(self, gestor_habitaciones):
         self.lista_reservas = []
-        self.gestor_habitaciones = gestor_habitaciones
+        self.gestor_habitaciones = GestorHabitaciones()
 
     def crear_reserva(self, cliente, numero_habitacion, fecha, hora):
-        habitacion = self.gestor_habitaciones.buscar_habitacion(numero_habitacion)
+        habitacion = next(
+            (h for h in self.gestor_habitaciones.habitaciones if h.numero == numero_habitacion),
+            None
+        )
 
         if habitacion is None:
             print("No existe una habitación con ese número.")
@@ -130,4 +133,5 @@ def menu():
         print()
 
 # Ejecutar el menú
-menu()
+if __name__=="__main__":
+    menu()
