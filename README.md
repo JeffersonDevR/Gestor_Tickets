@@ -15,37 +15,17 @@ Sistema integral de gestión hotelera desarrollado en Python que permite la admi
 ---
 
 ## ARQUITECTURA TÉCNICA
-
 ### Tecnologías Utilizadas
 - **Lenguaje**: Python 3.8+
 - **Paradigma**: Programación Orientada a Objetos
 - **Asincronía**: asyncio para operaciones concurrentes
 - **Validación**: Pydantic para modelos de datos
 
-### Estructura del Proyecto
-
-```
-Sistema_Gestion_Hotelera/
-├── main.py                    # Punto de entrada y menú principal
-├── requirements.txt           # Dependencias del proyecto
-├── README.md                  # Documentación técnica
-├── Documentacion/             # Documentación adicional
-│   └── Gestor_Tickets_Doc.docx
-├── Modulos/                   # Módulos funcionales
-│   ├── Clientes.py           # Gestión de clientes
-│   ├── Habitaciones.py       # Gestión de habitaciones
-│   ├── Reservas.py           # Gestión de reservas
-│   └── Pagos.py              # Procesamiento de pagos
-└── tests/                     # Suite de pruebas
-    ├── test_main.py
-    └── test_pagos.py
-```
-
 ### Patrón Arquitectónico
 El sistema sigue un patrón de arquitectura modular donde cada módulo representa una entidad de negocio específica:
 
 
-## 📋 REQUISITOS FUNCIONALES Y HISTORIAS DE USUARIO
+## REQUISITOS FUNCIONALES Y HISTORIAS DE USUARIO
 
 ### MÓDULO 1: GESTIÓN DE CLIENTES
 
@@ -72,12 +52,7 @@ El sistema sigue un patrón de arquitectura modular donde cada módulo represent
 - ✓ Se genera automáticamente un registro en el sistema
 - ✓ Se muestra mensaje de confirmación con los datos registrados
 - ✓ En caso de error de validación, se muestra mensaje específico
-
-
-**Prioridad**: Alta
-**Estimación**: 2 puntos
-**Módulo**: Clientes
-**Dependencias**: Ninguna
+- 
 
 #### RF-002: Actualización de información de clientes
 
@@ -175,6 +150,7 @@ El sistema sigue un patrón de arquitectura modular donde cada módulo represent
 - ✓ Se calcula automáticamente el monto total de la reserva
 - ✓ Se muestra confirmación con todos los detalles de la reserva
 
+
 #### RF-006: Modificación de reservas
 
 **Descripción**: El sistema debe permitir modificar fechas, horas y habitaciones de reservas existentes.
@@ -217,6 +193,7 @@ El sistema sigue un patrón de arquitectura modular donde cada módulo represent
 - ✓ Se elimina el registro de reserva del sistema
 - ✓ Se muestra confirmación de cancelación
 
+
 ### MÓDULO 4: GESTIÓN DE PAGOS
 
 #### RF-008: Procesamiento de pagos
@@ -244,7 +221,7 @@ El sistema sigue un patrón de arquitectura modular donde cada módulo represent
 
 ---
 
-## 📖 MANUAL DE USUARIO
+## MANUAL DE USUARIO
 
 ### Para Administradores
 
