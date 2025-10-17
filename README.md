@@ -1,13 +1,6 @@
 # Sistema de Gestión Hotelera
-
-## Hotel Management System (CLI)
-
-**Proyecto**: Sistema de Gestión Hotelera
-
-
 ---
-
-## 📋 VISIÓN GENERAL DEL PROYECTO
+## VISIÓN GENERAL DEL PROYECTO
 
 ### Descripción del Sistema
 Sistema integral de gestión hotelera desarrollado en Python que permite la administración completa de operaciones hoteleras a través de una interfaz de línea de comandos (CLI). El sistema está diseñado para manejar dos tipos de usuarios principales: **Administradores** y **Clientes**, con funcionalidades diferenciadas según el rol.
@@ -21,40 +14,20 @@ Sistema integral de gestión hotelera desarrollado en Python que permite la admi
 
 ---
 
-## 🏗️ ARQUITECTURA TÉCNICA
-
+## ARQUITECTURA TÉCNICA
 ### Tecnologías Utilizadas
 - **Lenguaje**: Python 3.8+
 - **Paradigma**: Programación Orientada a Objetos
 - **Asincronía**: asyncio para operaciones concurrentes
 - **Validación**: Pydantic para modelos de datos
 
-### Estructura del Proyecto
-
-```
-Sistema_Gestion_Hotelera/
-├── main.py                    # Punto de entrada y menú principal
-├── requirements.txt           # Dependencias del proyecto
-├── README.md                  # Documentación técnica
-├── Documentacion/             # Documentación adicional
-│   └── Gestor_Tickets_Doc.docx
-├── Modulos/                   # Módulos funcionales
-│   ├── Clientes.py           # Gestión de clientes
-│   ├── Habitaciones.py       # Gestión de habitaciones
-│   ├── Reservas.py           # Gestión de reservas
-│   └── Pagos.py              # Procesamiento de pagos
-└── tests/                     # Suite de pruebas
-    ├── test_main.py
-    └── test_pagos.py
-```
-
 ### Patrón Arquitectónico
 El sistema sigue un patrón de arquitectura modular donde cada módulo representa una entidad de negocio específica:
 
 
-## 📋 REQUISITOS FUNCIONALES Y HISTORIAS DE USUARIO
+## REQUISITOS FUNCIONALES Y HISTORIAS DE USUARIO
 
-### MÓDULO 1: GESTIÓN DE CLIENTES 👥
+### MÓDULO 1: GESTIÓN DE CLIENTES
 
 #### RF-001: Registro de nuevos clientes
 
@@ -80,11 +53,6 @@ El sistema sigue un patrón de arquitectura modular donde cada módulo represent
 - ✓ Se muestra mensaje de confirmación con los datos registrados
 - ✓ En caso de error de validación, se muestra mensaje específico
 
-
-**Prioridad**: Alta
-**Estimación**: 2 puntos
-**Módulo**: Clientes
-**Dependencias**: Ninguna
 
 #### RF-002: Actualización de información de clientes
 
@@ -156,7 +124,7 @@ El sistema sigue un patrón de arquitectura modular donde cada módulo represent
 - ✓ Se puede cambiar manualmente a "mantenimiento" cuando sea necesario
 
 
-### MÓDULO 3: GESTIÓN DE RESERVAS 📅
+### MÓDULO 3: GESTIÓN DE RESERVAS
 
 #### RF-005: Creación de reservas
 
@@ -181,6 +149,7 @@ El sistema sigue un patrón de arquitectura modular donde cada módulo represent
 - ✓ El estado de la habitación cambia automáticamente a "ocupada"
 - ✓ Se calcula automáticamente el monto total de la reserva
 - ✓ Se muestra confirmación con todos los detalles de la reserva
+
 
 #### RF-006: Modificación de reservas
 
@@ -224,7 +193,8 @@ El sistema sigue un patrón de arquitectura modular donde cada módulo represent
 - ✓ Se elimina el registro de reserva del sistema
 - ✓ Se muestra confirmación de cancelación
 
-### MÓDULO 4: GESTIÓN DE PAGOS 💰
+
+### MÓDULO 4: GESTIÓN DE PAGOS
 
 #### RF-008: Procesamiento de pagos
 
@@ -251,51 +221,7 @@ El sistema sigue un patrón de arquitectura modular donde cada módulo represent
 
 ---
 
-
-
-## 🚀 INSTALACIÓN Y CONFIGURACIÓN
-
-### Requisitos Previos
-- Python 3.8 o superior
-- pip (gestor de paquetes de Python)
-
-### Instalación
-
-1. **Clonar o descargar el proyecto**
-   ```bash
-   # Si tienes git instalado
-   git clone [url-del-repositorio]
-   cd Sistema_Gestion_Hotelera
-   ```
-
-2. **Crear entorno virtual (recomendado)**
-   ```bash
-   python -m venv venv
-   # En Windows
-   venv\Scripts\activate
-   # En Linux/Mac
-   source venv/bin/activate
-   ```
-
-3. **Instalar dependencias**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-### Ejecución del Sistema
-
-```bash
-python main.py
-```
-
-El sistema iniciará mostrando el menú principal con las siguientes opciones:
-1. Entrar como Administrador
-2. Entrar como Cliente
-3. Salir
-
----
-
-## 📖 MANUAL DE USUARIO
+## MANUAL DE USUARIO
 
 ### Para Administradores
 
