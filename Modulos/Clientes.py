@@ -32,8 +32,8 @@ class Cliente:
         if not encontrado:
               print(f"No hay un usuario que coincida con el nombre {buscar_cliente} en nuestros registros")
               return  
-        numero_de_documento = int(input("Ingrese su número de identificacion, para poder continuar con la actualizacion" \
-                "de algunos de sus datos; "))
+        numero_de_documento = int(input("Ingrese el número de identificacion, para poder continuar con la actualizacion" \
+                "de algunos de los datos; "))
         for cliente_coincididos in cls.clientes_registrados:
             if cliente_coincididos.n_identificacion == numero_de_documento:
                     print(f"Estos son sus datos actuales: {cliente_coincididos}")
