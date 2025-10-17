@@ -15,7 +15,7 @@ class Reserva:
 class GestorReservas:
     def __init__(self, gestor_habitaciones):
         self.lista_reservas = []
-        self.gestor_habitaciones = GestorHabitaciones()
+        self.gestor_habitaciones = gestor_habitaciones
 
     def crear_reserva(self, cliente, numero_habitacion, fecha, hora):
         habitacion = next(
