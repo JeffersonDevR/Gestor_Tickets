@@ -52,7 +52,7 @@ El sistema sigue un patrón de arquitectura modular donde cada módulo represent
 - ✓ Se genera automáticamente un registro en el sistema
 - ✓ Se muestra mensaje de confirmación con los datos registrados
 - ✓ En caso de error de validación, se muestra mensaje específico
-- 
+
 
 #### RF-002: Actualización de información de clientes
 
